@@ -103,7 +103,7 @@ export default function LibraryPage() {
     <div className="max-w-lg mx-auto">
       {/* 헤더 */}
       <div className="sticky top-0 bg-white z-10 px-5 pt-14 pb-0 border-b border-[#F0F0F0]">
-        <h1 className="text-2xl font-bold text-[#111] tracking-tight mb-4">내 서재</h1>
+        <h1 className="text-3xl font-bold text-[#111] tracking-tight mb-4">내 서재</h1>
 
         {/* 탭 — 언더라인 스타일 */}
         <div className="flex gap-6 overflow-x-auto">
@@ -111,7 +111,7 @@ export default function LibraryPage() {
             <button
               key={tab.key}
               onClick={() => handleTabChange(tab.key)}
-              className={`shrink-0 pb-3 text-sm font-medium border-b-2 transition-colors ${
+              className={`shrink-0 pb-3 text-base font-medium border-b-2 transition-colors ${
                 activeTab === tab.key
                   ? 'text-[#111] border-[#111]'
                   : 'text-[#bbb] border-transparent'
@@ -126,7 +126,7 @@ export default function LibraryPage() {
       {/* 목록 */}
       <div ref={listRef} className="px-5 pt-1">
         {isFetching && (
-          <div className="flex justify-center py-20 text-[#888] text-sm">불러오는 중...</div>
+          <div className="flex justify-center py-20 text-[#888] text-base">불러오는 중...</div>
         )}
 
         {!isFetching && items.length === 0 && (
@@ -136,7 +136,7 @@ export default function LibraryPage() {
               <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
               <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
             </svg>
-            <p className="text-sm text-[#aaa]">아직 추가한 책이 없어요</p>
+            <p className="text-base text-[#aaa]">아직 추가한 책이 없어요</p>
           </div>
         )}
 
@@ -168,28 +168,28 @@ export default function LibraryPage() {
                 </div>
 
                 <div className="flex-1 min-w-0 flex flex-col justify-center">
-                  <p className="text-[15px] font-semibold text-[#111] leading-snug line-clamp-2 mb-0.5">
+                  <p className="text-lg font-semibold text-[#111] leading-snug line-clamp-2 mb-0.5">
                     {item.book.title}
                   </p>
-                  <p className="text-xs text-[#888]">
+                  <p className="text-sm text-[#888]">
                     {item.book.author} · {item.book.publisher}
                     {item.book.pub_date && ` · ${item.book.pub_date.slice(0, 4)}`}
                   </p>
 
                   <div className="flex gap-1.5 mt-2 flex-wrap">
                     {item.userBook.is_owned && (
-                      <span className="px-2.5 py-0.5 bg-[#111] text-white text-[11px] font-medium rounded-full">
+                      <span className="px-2.5 py-0.5 bg-[#111] text-white text-sm font-medium rounded-full">
                         보유
                       </span>
                     )}
                     {item.userBook.read_status === 'read' && (
-                      <span className="px-2.5 py-0.5 bg-[#F0F0F0] text-[#555] text-[11px] font-medium rounded-full">읽었어요</span>
+                      <span className="px-2.5 py-0.5 bg-[#F0F0F0] text-[#555] text-sm font-medium rounded-full">읽었어요</span>
                     )}
                     {item.userBook.read_status === 'reading' && (
-                      <span className="px-2.5 py-0.5 bg-[#F0F0F0] text-[#555] text-[11px] font-medium rounded-full">읽는 중</span>
+                      <span className="px-2.5 py-0.5 bg-[#F0F0F0] text-[#555] text-sm font-medium rounded-full">읽는 중</span>
                     )}
                     {item.userBook.read_status === 'want_to_read' && (
-                      <span className="px-2.5 py-0.5 bg-[#F0F0F0] text-[#555] text-[11px] font-medium rounded-full">읽고 싶어요</span>
+                      <span className="px-2.5 py-0.5 bg-[#F0F0F0] text-[#555] text-sm font-medium rounded-full">읽고 싶어요</span>
                     )}
                   </div>
                 </div>

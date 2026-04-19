@@ -54,7 +54,7 @@ export default function BottomNav() {
             <Link
               key={tab.href}
               href={tab.href}
-              className={`flex-1 flex flex-col items-center gap-1 py-3 pb-6 text-[11px] font-medium transition-all active:scale-95 ${
+              className={`flex-1 flex flex-col items-center gap-1 py-3 pb-6 text-xs font-medium transition-all active:scale-95 ${
                 active ? 'text-[#111]' : 'text-[#bbb]'
               }`}
             >

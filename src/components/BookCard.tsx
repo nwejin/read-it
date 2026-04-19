@@ -42,10 +42,10 @@ export default function BookCard({ book, userBook, onClick }: Props) {
 
       {/* 정보 */}
       <div className="flex-1 min-w-0 flex flex-col justify-center">
-        <p className="text-[15px] font-semibold text-[#111] leading-snug line-clamp-2 mb-0.5">
+        <p className="text-lg font-semibold text-[#111] leading-snug line-clamp-2 mb-0.5">
           {book.title}
         </p>
-        <p className="text-xs text-[#888]">
+        <p className="text-sm text-[#888]">
           {book.author} · {book.publisher}
           {book.pubDate && ` · ${book.pubDate.slice(0, 4)}`}
         </p>
@@ -54,12 +54,12 @@ export default function BookCard({ book, userBook, onClick }: Props) {
         {hasAnyStatus && (
           <div className="flex gap-1.5 mt-2 flex-wrap">
             {userBook.is_owned && (
-              <span className="px-2.5 py-0.5 bg-[#111] text-white text-[11px] font-medium rounded-full">
+              <span className="px-2.5 py-0.5 bg-[#111] text-white text-sm font-medium rounded-full">
                 보유
               </span>
             )}
             {userBook.read_status && (
-              <span className="px-2.5 py-0.5 bg-[#F0F0F0] text-[#555] text-[11px] font-medium rounded-full">
+              <span className="px-2.5 py-0.5 bg-[#F0F0F0] text-[#555] text-sm font-medium rounded-full">
                 {READ_STATUS_LABEL[userBook.read_status]}
               </span>
             )}

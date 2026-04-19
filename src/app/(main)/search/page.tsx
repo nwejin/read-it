@@ -71,7 +71,7 @@ export default function SearchPage() {
     <div className="max-w-lg mx-auto">
       {/* 헤더 */}
       <div className="sticky top-0 bg-white z-10 px-5 pt-14 pb-4 border-b border-[#F0F0F0]">
-        <h1 className="text-2xl font-bold text-[#111] tracking-tight mb-4">읽었나?</h1>
+        <h1 className="text-3xl font-bold text-[#111] tracking-tight mb-4">읽었나?</h1>
         <form onSubmit={handleSearch} className="relative">
           <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#888]">
             <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none"
@@ -85,7 +85,7 @@ export default function SearchPage() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="책 제목, 저자 검색"
-            className="w-full pl-10 pr-10 py-3 bg-[#F7F7F7] rounded-xl text-sm text-[#111] placeholder-[#aaa] focus:outline-none focus:bg-white focus:ring-1 focus:ring-[#111] transition-all"
+            className="w-full pl-10 pr-10 py-3 bg-[#F7F7F7] rounded-xl text-base text-[#111] placeholder-[#aaa] focus:outline-none focus:bg-white focus:ring-1 focus:ring-[#111] transition-all"
           />
           {input && (
             <button
@@ -105,12 +105,12 @@ export default function SearchPage() {
       {/* 섹션 타이틀 */}
       <div className="px-5 pt-5 pb-1">
         {!isSearching && (
-          <p className="text-xs font-semibold text-[#888] uppercase tracking-widest">
+          <p className="text-sm font-semibold text-[#888] uppercase tracking-widest">
             이번 주 베스트셀러
           </p>
         )}
         {isSearching && !isFetching && searchResults.length > 0 && (
-          <p className="text-xs font-semibold text-[#888] uppercase tracking-widest">
+          <p className="text-sm font-semibold text-[#888] uppercase tracking-widest">
             검색 결과 {searchResults.length}건
           </p>
         )}
@@ -119,11 +119,11 @@ export default function SearchPage() {
       {/* 목록 */}
       <div className="px-5">
         {isFetching && (
-          <div className="flex justify-center py-20 text-[#888] text-sm">불러오는 중...</div>
+          <div className="flex justify-center py-20 text-[#888] text-base">불러오는 중...</div>
         )}
 
         {!isFetching && isSearching && searchResults.length === 0 && (
-          <div className="flex justify-center py-20 text-[#888] text-sm">검색 결과가 없어요.</div>
+          <div className="flex justify-center py-20 text-[#888] text-base">검색 결과가 없어요.</div>
         )}
 
         {!isFetching && books.length > 0 && (
@@ -131,7 +131,7 @@ export default function SearchPage() {
             {books.map((book, index) => (
               <div key={book.isbn13} className="relative">
                 {!isSearching && (
-                  <span className="absolute left-0 top-1/2 -translate-y-1/2 text-xs font-bold text-[#ddd] w-5 text-center">
+                  <span className="absolute left-0 top-1/2 -translate-y-1/2 text-sm font-bold text-[#ddd] w-5 text-center">
                     {index + 1}
                   </span>
                 )}

@@ -85,10 +85,10 @@ export default function BookStatusModal({
             </div>
           )}
           <div className="min-w-0 flex flex-col justify-center">
-            <h3 className="text-[15px] font-semibold text-[#111] leading-snug line-clamp-2">{book.title}</h3>
-            <p className="text-xs text-[#888] mt-0.5">{book.author}</p>
-            <p className="text-xs text-[#aaa]">{book.publisher}</p>
-            <Link href={`/book/${book.isbn13}`} className="text-xs text-[#aaa] underline mt-1.5 inline-block">
+            <h3 className="text-lg font-semibold text-[#111] leading-snug line-clamp-2">{book.title}</h3>
+            <p className="text-sm text-[#888] mt-0.5">{book.author}</p>
+            <p className="text-sm text-[#aaa]">{book.publisher}</p>
+            <Link href={`/book/${book.isbn13}`} className="text-sm text-[#aaa] underline mt-1.5 inline-block">
               자세히 보기 →
             </Link>
           </div>
@@ -96,10 +96,10 @@ export default function BookStatusModal({
 
         {/* 보유 여부 */}
         <div className="pb-5 mb-5 border-b border-[#F0F0F0]">
-          <p className="text-xs font-medium text-[#888] mb-2">집에 있나요?</p>
+          <p className="text-sm font-medium text-[#888] mb-2">집에 있나요?</p>
           <button
             onClick={() => setIsOwned((v) => !v)}
-            className={`w-full py-3.5 rounded-xl text-sm font-medium transition-all active:scale-[0.97] ${
+            className={`w-full py-3.5 rounded-xl text-base font-medium transition-all active:scale-[0.97] ${
               isOwned ? 'bg-[#111] text-white' : 'bg-[#F7F7F7] text-[#555]'
             }`}>
             {isOwned ? '집에 있어요' : '집에 없어요'}
@@ -108,13 +108,13 @@ export default function BookStatusModal({
 
         {/* 읽기 상태 */}
         <div className="pb-6 mb-6 border-b border-[#F0F0F0]">
-          <p className="text-xs font-medium text-[#888] mb-2">읽기 상태</p>
+          <p className="text-sm font-medium text-[#888] mb-2">읽기 상태</p>
           <div className="flex gap-2">
             {READ_STATUS_OPTIONS.map((opt) => (
               <button
                 key={opt.value}
                 onClick={() => setReadStatus((v) => (v === opt.value ? null : opt.value))}
-                className={`flex-1 py-3 rounded-xl text-xs font-medium transition-all active:scale-[0.95] ${
+                className={`flex-1 py-3 rounded-xl text-sm font-medium transition-all active:scale-[0.95] ${
                   readStatus === opt.value ? 'bg-[#111] text-white' : 'bg-[#F7F7F7] text-[#555]'
                 }`}>
                 {opt.label}
@@ -127,7 +127,7 @@ export default function BookStatusModal({
         <button
           onClick={handleSave}
           disabled={saving}
-          className="w-full py-4 bg-[#111] text-white text-sm font-semibold rounded-xl transition-all active:scale-[0.97] disabled:opacity-40">
+          className="w-full py-4 bg-[#111] text-white text-base font-semibold rounded-xl transition-all active:scale-[0.97] disabled:opacity-40">
           {saving ? '저장 중...' : '저장하기'}
         </button>
 
@@ -136,7 +136,7 @@ export default function BookStatusModal({
           <button
             onClick={handleDelete}
             disabled={saving}
-            className="w-full py-3 text-sm text-[#aaa] transition-all active:scale-[0.97] disabled:opacity-40">
+            className="w-full py-3 text-base text-[#aaa] transition-all active:scale-[0.97] disabled:opacity-40">
             서재에서 삭제
           </button>
         )}

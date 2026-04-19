@@ -37,7 +37,7 @@ export default function BookDetailPage({ params }: { params: Promise<{ isbn13: s
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center min-h-screen text-[#888] text-sm">
+      <div className="flex justify-center items-center min-h-screen text-[#888] text-base">
         불러오는 중...
       </div>
     )
@@ -45,7 +45,7 @@ export default function BookDetailPage({ params }: { params: Promise<{ isbn13: s
 
   if (!book) {
     return (
-      <div className="flex justify-center items-center min-h-screen text-[#888] text-sm">
+      <div className="flex justify-center items-center min-h-screen text-[#888] text-base">
         책을 찾을 수 없어요.
       </div>
     )
@@ -68,7 +68,7 @@ export default function BookDetailPage({ params }: { params: Promise<{ isbn13: s
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
           </svg>
         </button>
-        <span className="text-base font-semibold text-[#111] truncate">책 상세</span>
+        <span className="text-lg font-semibold text-[#111] truncate">책 상세</span>
       </div>
 
       <div className="px-5 pt-7 pb-32">
@@ -82,12 +82,12 @@ export default function BookDetailPage({ params }: { params: Promise<{ isbn13: s
             )}
           </div>
           <div className="flex-1 min-w-0 flex flex-col justify-center">
-            <h1 className="text-lg font-bold text-[#111] leading-snug mb-1">{book.title}</h1>
-            <p className="text-sm text-[#555] mb-0.5">{book.author}</p>
-            <p className="text-xs text-[#aaa]">{book.publisher}</p>
-            {book.pubDate && <p className="text-xs text-[#aaa]">{book.pubDate.slice(0, 4)}년 출판</p>}
+            <h1 className="text-xl font-bold text-[#111] leading-snug mb-1">{book.title}</h1>
+            <p className="text-base text-[#555] mb-0.5">{book.author}</p>
+            <p className="text-sm text-[#aaa]">{book.publisher}</p>
+            {book.pubDate && <p className="text-sm text-[#aaa]">{book.pubDate.slice(0, 4)}년 출판</p>}
             {book.subInfo?.itemPage && (
-              <p className="text-xs text-[#aaa]">{book.subInfo.itemPage}쪽</p>
+              <p className="text-sm text-[#aaa]">{book.subInfo.itemPage}쪽</p>
             )}
           </div>
         </div>
@@ -96,10 +96,10 @@ export default function BookDetailPage({ params }: { params: Promise<{ isbn13: s
         {hasStatus && (
           <div className="flex gap-1.5 mb-6 flex-wrap">
             {userBook.is_owned && (
-              <span className="px-2.5 py-1 bg-[#111] text-white text-xs font-medium rounded-full">보유</span>
+              <span className="px-2.5 py-1 bg-[#111] text-white text-sm font-medium rounded-full">보유</span>
             )}
             {userBook.read_status && (
-              <span className="px-2.5 py-1 bg-[#F0F0F0] text-[#555] text-xs font-medium rounded-full">
+              <span className="px-2.5 py-1 bg-[#F0F0F0] text-[#555] text-sm font-medium rounded-full">
                 {READ_STATUS_LABEL[userBook.read_status]}
               </span>
             )}
@@ -108,14 +108,14 @@ export default function BookDetailPage({ params }: { params: Promise<{ isbn13: s
 
         {/* 카테고리 */}
         {book.categoryName && (
-          <p className="text-xs text-[#aaa] mb-5">{book.categoryName}</p>
+          <p className="text-sm text-[#aaa] mb-5">{book.categoryName}</p>
         )}
 
         {/* 책 소개 */}
         {(book.fullDescription || book.description) && (
           <div className="mb-6">
-            <h2 className="text-sm font-semibold text-[#111] mb-3">책 소개</h2>
-            <p className="text-sm text-[#555] leading-relaxed whitespace-pre-line">
+            <h2 className="text-base font-semibold text-[#111] mb-3">책 소개</h2>
+            <p className="text-base text-[#555] leading-relaxed whitespace-pre-line">
               {book.fullDescription || book.description}
             </p>
           </div>
@@ -126,7 +126,7 @@ export default function BookDetailPage({ params }: { params: Promise<{ isbn13: s
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-[#F0F0F0] px-5 py-4">
         <button
           onClick={() => setShowModal(true)}
-          className="w-full py-4 bg-[#111] text-white text-sm font-semibold rounded-xl"
+          className="w-full py-4 bg-[#111] text-white text-base font-semibold rounded-xl"
         >
           {hasStatus ? '상태 변경' : '내 서재에 추가'}
         </button>

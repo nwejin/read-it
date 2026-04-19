@@ -53,7 +53,7 @@ export default function RegisterPage() {
           type="text"
           value={nickname}
           onChange={(e) => setNickname(e.target.value)}
-          className="w-full px-4 py-3.5 bg-[#F7F7F7] rounded-xl text-sm text-[#111] placeholder-[#aaa] focus:outline-none focus:ring-1 focus:ring-[#111] focus:bg-white transition-all"
+          className="w-full px-4 py-3.5 bg-[#F7F7F7] rounded-xl text-base text-[#111] placeholder-[#aaa] focus:outline-none focus:ring-1 focus:ring-[#111] focus:bg-white transition-all"
           placeholder="닉네임"
           required
         />
@@ -61,7 +61,7 @@ export default function RegisterPage() {
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full px-4 py-3.5 bg-[#F7F7F7] rounded-xl text-sm text-[#111] placeholder-[#aaa] focus:outline-none focus:ring-1 focus:ring-[#111] focus:bg-white transition-all"
+          className="w-full px-4 py-3.5 bg-[#F7F7F7] rounded-xl text-base text-[#111] placeholder-[#aaa] focus:outline-none focus:ring-1 focus:ring-[#111] focus:bg-white transition-all"
           placeholder="이메일"
           required
         />
@@ -69,25 +69,25 @@ export default function RegisterPage() {
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full px-4 py-3.5 bg-[#F7F7F7] rounded-xl text-sm text-[#111] placeholder-[#aaa] focus:outline-none focus:ring-1 focus:ring-[#111] focus:bg-white transition-all"
+          className="w-full px-4 py-3.5 bg-[#F7F7F7] rounded-xl text-base text-[#111] placeholder-[#aaa] focus:outline-none focus:ring-1 focus:ring-[#111] focus:bg-white transition-all"
           placeholder="비밀번호 (6자 이상)"
           required
         />
 
-        {error && <p className="text-xs text-red-500 pt-1">{error}</p>}
+        {error && <p className="text-sm text-red-500 pt-1">{error}</p>}
 
         <div className="pt-1">
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-4 bg-[#111] text-white text-sm font-semibold rounded-xl transition-all active:scale-[0.97] disabled:opacity-40"
+            className="w-full py-4 bg-[#111] text-white text-base font-semibold rounded-xl transition-all active:scale-[0.97] disabled:opacity-40"
           >
             {loading ? '가입 중...' : '회원가입'}
           </button>
         </div>
       </form>
 
-      <p className="mt-6 text-center text-sm text-[#888]">
+      <p className="mt-6 text-center text-base text-[#888]">
         이미 계정이 있으신가요?{' '}
         <Link href="/login" className="font-semibold text-[#111]">
           로그인
