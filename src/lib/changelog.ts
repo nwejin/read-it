@@ -6,6 +6,11 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '1.3',
+    date: '2026-04-20',
+    items: ['서재 통계 뷰 추가 (보유/읽기/별점 현황)'],
+  },
+  {
     version: '1.2',
     date: '2026-04-20',
     items: ['보유/읽기 상태 UI 개선 (슬라이드 선택)', '미보유 서재 탭 추가', '읽은 책 별점 기능 추가', '서재 탭 스와이프 전환'],
