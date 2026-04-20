@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { CHANGELOG } from '@/lib/changelog'
 
 export default function ProfilePage() {
   const router = useRouter()
@@ -49,6 +50,25 @@ export default function ProfilePage() {
       >
         {loading ? '로그아웃 중...' : '로그아웃'}
       </button>
+
+      <div className="mt-10">
+        <h2 className="text-lg font-bold text-[#111] mb-4">업데이트 내역</h2>
+        <div className="space-y-4">
+          {CHANGELOG.map((entry) => (
+            <div key={entry.version} className="py-4 border-b border-[#F0F0F0]">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-sm font-semibold text-[#111]">v{entry.version}</span>
+                <span className="text-xs text-[#aaa]">{entry.date}</span>
+              </div>
+              <ul className="space-y-0.5">
+                {entry.items.map((item) => (
+                  <li key={item} className="text-sm text-[#888]">• {item}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   )
 }
