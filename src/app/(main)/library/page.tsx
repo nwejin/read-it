@@ -9,7 +9,7 @@ import { AladinBook, ReadStatus, UserBook } from '@/types'
 import BookStatusModal from '@/components/BookStatusModal'
 import { useUserBooks } from '@/hooks/useUserBooks'
 
-type Tab = 'owned' | 'read' | 'reading' | 'want_to_read'
+type Tab = 'owned' | 'not_owned' | 'read' | 'reading' | 'want_to_read'
 
 interface LibraryItem {
   userBook: UserBook
@@ -26,6 +26,7 @@ interface LibraryItem {
 
 const TABS: { key: Tab; label: string }[] = [
   { key: 'owned', label: '보유' },
+  { key: 'not_owned', label: '미보유' },
   { key: 'read', label: '읽었어요' },
   { key: 'reading', label: '읽는 중' },
   { key: 'want_to_read', label: '읽고 싶어요' },
@@ -53,6 +54,8 @@ async function fetchLibrary(tab: Tab): Promise<LibraryItem[]> {
 
   if (tab === 'owned') {
     query = query.eq('is_owned', true)
+  } else if (tab === 'not_owned') {
+    query = query.eq('is_owned', false)
   } else {
     query = query.eq('read_status', tab)
   }
@@ -79,7 +82,7 @@ export default function LibraryPage() {
       gsap.set(listRef.current, { opacity: 1, y: 0 })
       gsap.fromTo(cards,
         { opacity: 0, y: 12 },
-        { opacity: 1, y: 0, duration: 0.3, stagger: 0.05, ease: 'power2.out' }
+        { opacity: 1, y: 0, duration: 0.3, stagger: 0.05, ease: 'power2.out', clearProps: 'transform' }
       )
     }
   }, [isFetching, items])
@@ -94,9 +97,9 @@ export default function LibraryPage() {
     })
   }
 
-  async function handleSaveStatus(isOwned: boolean, readStatus: ReadStatus | null) {
+  async function handleSaveStatus(isOwned: boolean, readStatus: ReadStatus | null, rating: number | null) {
     if (!selectedBook) return
-    await upsertUserBook({ book: selectedBook, isOwned, readStatus })
+    await upsertUserBook({ book: selectedBook, isOwned, readStatus, rating })
   }
 
   return (
@@ -177,10 +180,10 @@ export default function LibraryPage() {
                   </p>
 
                   <div className="flex gap-1.5 mt-2 flex-wrap">
-                    {item.userBook.is_owned && (
-                      <span className="px-2.5 py-0.5 bg-[#111] text-white text-sm font-medium rounded-full">
-                        보유
-                      </span>
+                    {item.userBook.is_owned ? (
+                      <span className="px-2.5 py-0.5 bg-[#111] text-white text-sm font-medium rounded-full">보유</span>
+                    ) : (
+                      <span className="px-2.5 py-0.5 bg-[#F0F0F0] text-[#888] text-sm font-medium rounded-full">미보유</span>
                     )}
                     {item.userBook.read_status === 'read' && (
                       <span className="px-2.5 py-0.5 bg-[#F0F0F0] text-[#555] text-sm font-medium rounded-full">읽었어요</span>
@@ -190,6 +193,11 @@ export default function LibraryPage() {
                     )}
                     {item.userBook.read_status === 'want_to_read' && (
                       <span className="px-2.5 py-0.5 bg-[#F0F0F0] text-[#555] text-sm font-medium rounded-full">읽고 싶어요</span>
+                    )}
+                    {item.userBook.rating !== null && item.userBook.rating !== undefined && (
+                      <span className="px-2.5 py-0.5 bg-[#F0F0F0] text-[#555] text-sm font-medium rounded-full">
+                        {'★'.repeat(item.userBook.rating)}{'☆'.repeat(5 - item.userBook.rating)}
+                      </span>
                     )}
                   </div>
                 </div>

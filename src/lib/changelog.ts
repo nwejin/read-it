@@ -6,6 +6,11 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '1.2',
+    date: '2026-04-20',
+    items: ['보유/읽기 상태 UI 개선 (슬라이드 선택)', '미보유 서재 탭 추가', '읽은 책 별점 기능 추가'],
+  },
+  {
     version: '1.1',
     date: '2026-04-20',
     items: ['업데이트 알림 기능 추가'],

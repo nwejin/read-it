@@ -53,14 +53,19 @@ export default function BookCard({ book, userBook, onClick }: Props) {
         {/* 상태 배지 */}
         {hasAnyStatus && (
           <div className="flex gap-1.5 mt-2 flex-wrap">
-            {userBook.is_owned && (
-              <span className="px-2.5 py-0.5 bg-[#111] text-white text-sm font-medium rounded-full">
-                보유
-              </span>
+            {userBook.is_owned ? (
+              <span className="px-2.5 py-0.5 bg-[#111] text-white text-sm font-medium rounded-full">보유</span>
+            ) : (
+              <span className="px-2.5 py-0.5 bg-[#F0F0F0] text-[#888] text-sm font-medium rounded-full">미보유</span>
             )}
             {userBook.read_status && (
               <span className="px-2.5 py-0.5 bg-[#F0F0F0] text-[#555] text-sm font-medium rounded-full">
                 {READ_STATUS_LABEL[userBook.read_status]}
+              </span>
+            )}
+            {userBook.rating !== null && userBook.rating !== undefined && (
+              <span className="px-2.5 py-0.5 bg-[#F0F0F0] text-[#555] text-sm font-medium rounded-full">
+                {'★'.repeat(userBook.rating)}{'☆'.repeat(5 - userBook.rating)}
               </span>
             )}
           </div>

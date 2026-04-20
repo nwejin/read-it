@@ -24,6 +24,7 @@ export interface UserBook {
   isbn13: string
   is_owned: boolean
   read_status: ReadStatus | null
+  rating: number | null
   created_at: string
   updated_at: string
 }

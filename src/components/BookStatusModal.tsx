@@ -9,7 +9,7 @@ import { AladinBook, ReadStatus, UserBook } from '@/types';
 interface Props {
   book: AladinBook;
   userBook?: UserBook | null;
-  onSave: (isOwned: boolean, readStatus: ReadStatus | null) => Promise<void>;
+  onSave: (isOwned: boolean, readStatus: ReadStatus | null, rating: number | null) => Promise<void>;
   onClose: () => void;
   saving?: boolean;
   showDelete?: boolean;
@@ -31,9 +31,13 @@ export default function BookStatusModal({
 }: Props) {
   const [isOwned, setIsOwned] = useState(userBook?.is_owned ?? false);
   const [readStatus, setReadStatus] = useState<ReadStatus | null>(userBook?.read_status ?? null);
+  const [rating, setRating] = useState<number | null>(userBook?.rating ?? null);
 
   const overlayRef = useRef<HTMLDivElement>(null);
   const sheetRef = useRef<HTMLDivElement>(null);
+
+  const ownedIndex = isOwned ? 0 : 1;
+  const readIndex = READ_STATUS_OPTIONS.findIndex((o) => o.value === readStatus);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -54,12 +58,12 @@ export default function BookStatusModal({
   }
 
   async function handleSave() {
-    await onSave(isOwned, readStatus);
+    await onSave(isOwned, readStatus, rating);
     handleClose();
   }
 
   async function handleDelete() {
-    await onSave(false, null);
+    await onSave(false, null, null);
     handleClose();
   }
 
@@ -72,7 +76,6 @@ export default function BookStatusModal({
         ref={sheetRef}
         className="w-full bg-white rounded-t-3xl px-5 pt-3 pb-10"
         onClick={(e) => e.stopPropagation()}>
-        {/* 핸들바 */}
         <div className="flex justify-center mb-5">
           <div className="w-10 h-1 bg-[#E0E0E0] rounded-full" />
         </div>
@@ -97,26 +100,62 @@ export default function BookStatusModal({
         {/* 보유 여부 */}
         <div className="pb-5 mb-5 border-b border-[#F0F0F0]">
           <p className="text-sm font-medium text-[#888] mb-2">집에 있나요?</p>
-          <button
-            onClick={() => setIsOwned((v) => !v)}
-            className={`w-full py-3.5 rounded-xl text-base font-medium transition-all active:scale-[0.97] ${
-              isOwned ? 'bg-[#111] text-white' : 'bg-[#F7F7F7] text-[#555]'
-            }`}>
-            {isOwned ? '집에 있어요' : '집에 없어요'}
-          </button>
+          <div className="relative flex bg-[#F7F7F7] rounded-xl p-1">
+            <div
+              className="absolute top-1 bottom-1 bg-[#111] rounded-lg transition-all duration-200 ease-in-out"
+              style={{
+                left: `calc(4px + ${ownedIndex} * (100% - 8px) / 2)`,
+                width: 'calc((100% - 8px) / 2)',
+              }}
+            />
+            <button
+              onClick={() => setIsOwned(true)}
+              className={`relative z-10 flex-1 py-3.5 text-sm font-medium transition-colors duration-200 ${isOwned ? 'text-white' : 'text-[#555]'}`}>
+              집에 있어요
+            </button>
+            <button
+              onClick={() => setIsOwned(false)}
+              className={`relative z-10 flex-1 py-3.5 text-sm font-medium transition-colors duration-200 ${!isOwned ? 'text-white' : 'text-[#555]'}`}>
+              집에 없어요
+            </button>
+          </div>
         </div>
 
         {/* 읽기 상태 */}
         <div className="pb-6 mb-6 border-b border-[#F0F0F0]">
-          <p className="text-sm font-medium text-[#888] mb-2">읽기 상태</p>
-          <div className="flex gap-2">
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-sm font-medium text-[#888]">읽기 상태</p>
+            <div className={`flex items-center gap-1 transition-all duration-200 ${readStatus === 'read' ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+              {[1, 2, 3, 4, 5].map((star) => (
+                <button
+                  key={star}
+                  onClick={() => setRating((v) => (v === star ? null : star))}
+                  className="text-xl leading-none transition-transform active:scale-90"
+                >
+                  <span className={rating !== null && star <= rating ? 'text-[#111]' : 'text-[#E0E0E0]'}>★</span>
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="relative flex bg-[#F7F7F7] rounded-xl p-1">
+            {readIndex >= 0 && (
+              <div
+                className="absolute top-1 bottom-1 bg-[#111] rounded-lg transition-all duration-200 ease-in-out"
+                style={{
+                  left: `calc(4px + ${readIndex} * (100% - 8px) / 3)`,
+                  width: 'calc((100% - 8px) / 3)',
+                }}
+              />
+            )}
             {READ_STATUS_OPTIONS.map((opt) => (
               <button
                 key={opt.value}
-                onClick={() => setReadStatus((v) => (v === opt.value ? null : opt.value))}
-                className={`flex-1 py-3 rounded-xl text-sm font-medium transition-all active:scale-[0.95] ${
-                  readStatus === opt.value ? 'bg-[#111] text-white' : 'bg-[#F7F7F7] text-[#555]'
-                }`}>
+                onClick={() => {
+                  const next = readStatus === opt.value ? null : opt.value
+                  setReadStatus(next)
+                  if (next !== 'read') setRating(null)
+                }}
+                className={`relative z-10 flex-1 py-3 text-sm font-medium transition-colors duration-200 ${readStatus === opt.value ? 'text-white' : 'text-[#555]'}`}>
                 {opt.label}
               </button>
             ))}
@@ -131,7 +170,6 @@ export default function BookStatusModal({
           {saving ? '저장 중...' : '저장하기'}
         </button>
 
-        {/* 삭제 버튼 */}
         {showDelete && (
           <button
             onClick={handleDelete}

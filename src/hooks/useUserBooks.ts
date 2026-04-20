@@ -29,10 +29,12 @@ export function useUserBooks(isbn13s: string[]) {
       book,
       isOwned,
       readStatus,
+      rating,
     }: {
       book: AladinBook
       isOwned: boolean
       readStatus: ReadStatus | null
+      rating: number | null
     }) => {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) throw new Error('로그인이 필요해요.')
@@ -66,6 +68,7 @@ export function useUserBooks(isbn13s: string[]) {
           isbn13: book.isbn13,
           is_owned: isOwned,
           read_status: readStatus,
+          rating: readStatus === 'read' ? rating : null,
           updated_at: new Date().toISOString(),
         }, { onConflict: 'user_id,isbn13' })
         .select()

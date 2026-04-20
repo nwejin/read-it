@@ -30,9 +30,9 @@ export default function BookDetailPage({ params }: { params: Promise<{ isbn13: s
   const { userBooks, upsertUserBook, isPending } = useUserBooks(isbn13 ? [isbn13] : [])
   const userBook = userBooks[isbn13]
 
-  async function handleSave(isOwned: boolean, readStatus: ReadStatus | null) {
+  async function handleSave(isOwned: boolean, readStatus: ReadStatus | null, rating: number | null) {
     if (!book) return
-    await upsertUserBook({ book, isOwned, readStatus })
+    await upsertUserBook({ book, isOwned, readStatus, rating })
   }
 
   if (isLoading) {
