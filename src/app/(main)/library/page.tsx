@@ -69,6 +69,9 @@ export default function LibraryPage() {
   const [selectedBook, setSelectedBook] = useState<AladinBook | null>(null)
   const [selectedUserBook, setSelectedUserBook] = useState<UserBook | null>(null)
   const listRef = useRef<HTMLDivElement>(null)
+  const tabBarRef = useRef<HTMLDivElement>(null)
+  const touchStartX = useRef(0)
+  const touchStartY = useRef(0)
 
   const { data: items = [], isFetching } = useQuery({
     queryKey: ['library', activeTab],
@@ -87,6 +90,12 @@ export default function LibraryPage() {
     }
   }, [isFetching, items])
 
+  useEffect(() => {
+    if (!tabBarRef.current) return
+    const activeBtn = tabBarRef.current.querySelector<HTMLElement>(`[data-tab="${activeTab}"]`)
+    activeBtn?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' })
+  }, [activeTab])
+
   const { upsertUserBook, isPending } = useUserBooks([])
 
   function handleTabChange(tab: Tab) {
@@ -95,6 +104,22 @@ export default function LibraryPage() {
       opacity: 0, y: 6, duration: 0.15, ease: 'power2.in',
       onComplete: () => setActiveTab(tab),
     })
+  }
+
+  function handleTouchStart(e: React.TouchEvent) {
+    touchStartX.current = e.touches[0].clientX
+    touchStartY.current = e.touches[0].clientY
+  }
+
+  function handleTouchEnd(e: React.TouchEvent) {
+    if (selectedBook) return
+    if (touchStartX.current < 20 || touchStartX.current > window.innerWidth - 20) return
+    const deltaX = e.changedTouches[0].clientX - touchStartX.current
+    const deltaY = Math.abs(e.changedTouches[0].clientY - touchStartY.current)
+    if (Math.abs(deltaX) < 50 || deltaY > Math.abs(deltaX)) return
+    const currentIndex = TABS.findIndex((t) => t.key === activeTab)
+    if (deltaX < 0 && currentIndex < TABS.length - 1) handleTabChange(TABS[currentIndex + 1].key)
+    else if (deltaX > 0 && currentIndex > 0) handleTabChange(TABS[currentIndex - 1].key)
   }
 
   async function handleSaveStatus(isOwned: boolean, readStatus: ReadStatus | null, rating: number | null) {
@@ -109,10 +134,11 @@ export default function LibraryPage() {
         <h1 className="text-3xl font-bold text-[#111] tracking-tight mb-4">내 서재</h1>
 
         {/* 탭 — 언더라인 스타일 */}
-        <div className="flex gap-6 overflow-x-auto">
+        <div ref={tabBarRef} className="flex gap-6 overflow-x-auto scrollbar-none">
           {TABS.map((tab) => (
             <button
               key={tab.key}
+              data-tab={tab.key}
               onClick={() => handleTabChange(tab.key)}
               className={`shrink-0 pb-3 text-base font-medium border-b-2 transition-colors ${
                 activeTab === tab.key
@@ -127,7 +153,12 @@ export default function LibraryPage() {
       </div>
 
       {/* 목록 */}
-      <div ref={listRef} className="px-5 pt-1">
+      <div
+        ref={listRef}
+        className="px-5 pt-1"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
         {isFetching && (
           <div className="flex justify-center py-20 text-[#888] text-base">불러오는 중...</div>
         )}
