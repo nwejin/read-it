@@ -36,7 +36,7 @@ export default function UpdateBanner() {
       }`}
       onTransitionEnd={() => { if (!visible) setRendered(false) }}
     >
-      <div className="bg-[#111] text-white px-5 py-3 flex items-start justify-between gap-3 shadow-lg">
+      <div onClick={handleClose} className="bg-[#111] text-white px-5 py-3 flex items-start justify-between gap-3 shadow-lg cursor-pointer">
         <div className="flex-1 min-w-0">
           <p className="text-sm font-medium">v{latest.version} 업데이트</p>
           <ul className="mt-0.5">
