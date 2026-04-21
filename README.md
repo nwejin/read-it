@@ -3,6 +3,10 @@
 집에 있는 책을 관리하는 가족용 독서 기록 앱입니다.  
 보유 여부 확인, 독서 상태 추적, 별점 기록을 간편하게 할 수 있습니다.
 
+🔗 **[https://read-it-cj.vercel.app/search](https://read-it-cj.vercel.app/search)**
+
+> 회원가입 후 이용할 수 있습니다.
+
 ---
 
 ## 기술 스택
@@ -37,33 +41,3 @@
 | v1.2 | UI 개선, 미보유 탭, 별점 기능, 탭 스와이프 | 2026-04-20 |
 | v1.1 | 업데이트 알림 배너 | 2026-04-20 |
 | v1.0 | 책 검색, 서재 추가, 독서 상태 관리 | 2026-04-01 |
-
----
-
-## 환경변수 설정
-
-`.env.local` 파일을 생성하고 아래 값을 입력하세요.
-
-```env
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-ALADIN_TTB_KEY=your_aladin_ttb_key
-```
-
----
-
-## 실행 방법
-
-```bash
-# 의존성 설치
-npm install
-
-# 개발 서버 실행
-npm run dev
-
-# 프로덕션 빌드
-npm run build
-npm start
-```
-
-개발 서버 실행 후 [http://localhost:3000](http://localhost:3000)에서 확인할 수 있습니다.
