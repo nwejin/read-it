@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 읽었나? 📚
 
-## Getting Started
+집에 있는 책을 관리하는 가족용 독서 기록 앱입니다.  
+보유 여부 확인, 독서 상태 추적, 별점 기록을 간편하게 할 수 있습니다.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 기술 스택
+
+| 분류 | 기술 |
+|------|------|
+| Framework | Next.js 16 (TypeScript) |
+| Database | Supabase |
+| 책 데이터 | 알라딘 Open API |
+| 배포 | Vercel |
+| 스타일링 | Tailwind CSS v4 |
+| 상태 관리 | TanStack Query v5 |
+
+---
+
+## 주요 기능
+
+- **책 검색** — 알라딘 API를 통한 도서 검색
+- **서재 관리** — 보유 여부 등록 및 보유/미보유 탭 분리
+- **독서 상태** — 읽음 / 읽는 중 / 안읽음 상태 관리
+- **별점 기록** — 읽은 책에 별점(1~5) 부여
+- **통계 뷰** — 보유 현황, 읽기 상태, 별점 분포 시각화
+- **업데이트 알림** — 새 버전 배포 시 인앱 배너 표시
+
+---
+
+## 버전 히스토리
+
+| 버전 | 주요 변경 | 날짜 |
+|------|-----------|------|
+| v1.3 | 서재 통계 뷰 추가 | 2026-04-20 |
+| v1.2 | UI 개선, 미보유 탭, 별점 기능, 탭 스와이프 | 2026-04-20 |
+| v1.1 | 업데이트 알림 배너 | 2026-04-20 |
+| v1.0 | 책 검색, 서재 추가, 독서 상태 관리 | 2026-04-01 |
+
+---
+
+## 환경변수 설정
+
+`.env.local` 파일을 생성하고 아래 값을 입력하세요.
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+ALADIN_TTB_KEY=your_aladin_ttb_key
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 실행 방법
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+# 의존성 설치
+npm install
 
-## Learn More
+# 개발 서버 실행
+npm run dev
 
-To learn more about Next.js, take a look at the following resources:
+# 프로덕션 빌드
+npm run build
+npm start
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+개발 서버 실행 후 [http://localhost:3000](http://localhost:3000)에서 확인할 수 있습니다.
