@@ -18,6 +18,7 @@
 | 책 데이터 | 알라딘 Open API |
 | 배포 | Vercel |
 | 스타일링 | Tailwind CSS v4 |
+| 애니메니션 | GSAP |
 | 상태 관리 | TanStack Query v5 |
 
 ---
