@@ -30,7 +30,9 @@ export default function BookStatusModal({
   showDelete = false,
 }: Props) {
   const [isOwned, setIsOwned] = useState(userBook?.is_owned ?? false);
-  const [readStatus, setReadStatus] = useState<ReadStatus | null>(userBook?.read_status ?? null);
+  const [readStatus, setReadStatus] = useState<ReadStatus | null>(
+    userBook ? (userBook.read_status ?? null) : 'want_to_read'
+  );
   const [rating, setRating] = useState<number | null>(userBook?.rating ?? null);
 
   const overlayRef = useRef<HTMLDivElement>(null);
