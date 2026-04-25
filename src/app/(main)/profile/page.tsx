@@ -4,21 +4,39 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { CHANGELOG } from '@/lib/changelog'
+import WithdrawModal from '@/components/WithdrawModal'
 
 export default function ProfilePage() {
   const router = useRouter()
   const [email, setEmail] = useState('')
   const [nickname, setNickname] = useState('')
+  const [userCode, setUserCode] = useState('')
+  const [copied, setCopied] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [showWithdraw, setShowWithdraw] = useState(false)
+  const [withdrawing, setWithdrawing] = useState(false)
 
   useEffect(() => {
     const supabase = createClient()
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session) return
-      setEmail(session.user.email ?? '')
-      setNickname(session.user.user_metadata?.nickname ?? '')
+    supabase.auth.getUser().then(async ({ data: { user } }) => {
+      if (!user) return
+      setEmail(user.email ?? '')
+      const { data } = await supabase
+        .from('profiles')
+        .select('nickname, user_code')
+        .eq('id', user.id)
+        .single()
+      setNickname(data?.nickname ?? user.user_metadata?.nickname ?? '')
+      setUserCode(data?.user_code ?? '')
     })
   }, [])
+
+  async function handleCopyCode() {
+    if (!userCode) return
+    await navigator.clipboard.writeText(userCode)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
 
   async function handleLogout() {
     setLoading(true)
@@ -26,6 +44,19 @@ export default function ProfilePage() {
     await supabase.auth.signOut()
     router.push('/login')
     router.refresh()
+  }
+
+  async function handleWithdraw() {
+    setWithdrawing(true)
+    const res = await fetch('/api/auth/withdraw', { method: 'DELETE' })
+    if (res.ok) {
+      const supabase = createClient()
+      await supabase.auth.signOut()
+      router.push('/login')
+      router.refresh()
+    } else {
+      setWithdrawing(false)
+    }
   }
 
   return (
@@ -41,6 +72,21 @@ export default function ProfilePage() {
           <p className="text-sm text-[#aaa] mb-1">이메일</p>
           <p className="text-base font-medium text-[#111]">{email || '-'}</p>
         </div>
+        <div className="py-4 border-b border-[#F0F0F0]">
+          <p className="text-sm text-[#aaa] mb-2">내 코드</p>
+          <button
+            onClick={handleCopyCode}
+            className="flex items-center gap-3 active:scale-95 transition-transform"
+          >
+            <p className="text-2xl font-bold text-[#111] tracking-widest font-mono">
+              {userCode || '------'}
+            </p>
+            <span className="text-xs text-[#aaa] border border-[#E0E0E0] rounded-lg px-2 py-1">
+              {copied ? '복사됨 ✓' : '탭해서 복사'}
+            </span>
+          </button>
+          <p className="text-xs text-[#bbb] mt-2">친구에게 이 코드를 알려주세요</p>
+        </div>
       </div>
 
       <button
@@ -50,6 +96,21 @@ export default function ProfilePage() {
       >
         {loading ? '로그아웃 중...' : '로그아웃'}
       </button>
+
+      <button
+        onClick={() => setShowWithdraw(true)}
+        className="w-full py-3 text-sm text-[#ccc] mt-2"
+      >
+        회원 탈퇴
+      </button>
+
+      {showWithdraw && (
+        <WithdrawModal
+          onConfirm={handleWithdraw}
+          onClose={() => setShowWithdraw(false)}
+          loading={withdrawing}
+        />
+      )}
 
       <div className="mt-10">
         <h2 className="text-lg font-bold text-[#111] mb-4">업데이트 내역</h2>
