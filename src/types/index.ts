@@ -3,7 +3,22 @@ export type ReadStatus = 'read' | 'reading' | 'want_to_read'
 export interface Profile {
   id: string
   nickname: string
+  user_code: string
   created_at: string
+}
+
+export interface Friendship {
+  id: string
+  follower_id: string
+  following_id: string
+  created_at: string
+}
+
+export interface FriendEntry {
+  id: string
+  following_id: string
+  created_at: string
+  following: Profile
 }
 
 export interface Book {
