@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { CHANGELOG } from '@/lib/changelog'
+import WithdrawModal from '@/components/WithdrawModal'
 
 export default function ProfilePage() {
   const router = useRouter()
@@ -12,6 +13,8 @@ export default function ProfilePage() {
   const [userCode, setUserCode] = useState('')
   const [copied, setCopied] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [showWithdraw, setShowWithdraw] = useState(false)
+  const [withdrawing, setWithdrawing] = useState(false)
 
   useEffect(() => {
     const supabase = createClient()
@@ -41,6 +44,19 @@ export default function ProfilePage() {
     await supabase.auth.signOut()
     router.push('/login')
     router.refresh()
+  }
+
+  async function handleWithdraw() {
+    setWithdrawing(true)
+    const res = await fetch('/api/auth/withdraw', { method: 'DELETE' })
+    if (res.ok) {
+      const supabase = createClient()
+      await supabase.auth.signOut()
+      router.push('/login')
+      router.refresh()
+    } else {
+      setWithdrawing(false)
+    }
   }
 
   return (
@@ -80,6 +96,21 @@ export default function ProfilePage() {
       >
         {loading ? '로그아웃 중...' : '로그아웃'}
       </button>
+
+      <button
+        onClick={() => setShowWithdraw(true)}
+        className="w-full py-3 text-sm text-[#ccc] mt-2"
+      >
+        회원 탈퇴
+      </button>
+
+      {showWithdraw && (
+        <WithdrawModal
+          onConfirm={handleWithdraw}
+          onClose={() => setShowWithdraw(false)}
+          loading={withdrawing}
+        />
+      )}
 
       <div className="mt-10">
         <h2 className="text-lg font-bold text-[#111] mb-4">업데이트 내역</h2>
