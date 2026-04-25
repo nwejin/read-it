@@ -10,7 +10,7 @@ async function fetchFollowing(): Promise<FriendEntry[]> {
     .from('friendships')
     .select('id, following_id, created_at, following:profiles!following_id(id, nickname, user_code, created_at)')
     .order('created_at', { ascending: false })
-  return (data ?? []) as FriendEntry[]
+  return (data ?? []) as unknown as FriendEntry[]
 }
 
 async function fetchUserByCode(code: string): Promise<Profile | null> {
