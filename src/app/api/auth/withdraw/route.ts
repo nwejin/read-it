@@ -16,6 +16,11 @@ export async function DELETE() {
     { auth: { autoRefreshToken: false, persistSession: false } }
   )
 
+  // 관련 데이터 먼저 삭제 (FK 제약 해제)
+  await adminClient.from('user_books').delete().eq('user_id', user.id)
+  await adminClient.from('friendships').delete().or(`follower_id.eq.${user.id},following_id.eq.${user.id}`)
+  await adminClient.from('profiles').delete().eq('id', user.id)
+
   const { error } = await adminClient.auth.admin.deleteUser(user.id)
 
   if (error) {
