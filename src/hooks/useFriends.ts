@@ -6,9 +6,12 @@ import { FriendEntry, Profile } from '@/types'
 
 async function fetchFollowing(): Promise<FriendEntry[]> {
   const supabase = createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return []
   const { data } = await supabase
     .from('friendships')
     .select('id, following_id, created_at, following:profiles!following_id(id, nickname, user_code, created_at)')
+    .eq('follower_id', user.id)
     .order('created_at', { ascending: false })
   return (data ?? []) as unknown as FriendEntry[]
 }
@@ -61,9 +64,12 @@ export function useFollowMutations() {
   const unfollow = useMutation({
     mutationFn: async (targetUserId: string) => {
       const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) throw new Error('로그인이 필요해요.')
       const { error } = await supabase
         .from('friendships')
         .delete()
+        .eq('follower_id', user.id)
         .eq('following_id', targetUserId)
       if (error) throw error
     },

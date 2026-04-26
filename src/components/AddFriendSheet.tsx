@@ -50,12 +50,12 @@ export default function AddFriendSheet({ onClose }: Props) {
 
   async function handleFollow() {
     if (!foundUser) return
+    if (foundUser.id === myId) return
     await follow.mutateAsync(foundUser.id)
     handleClose()
   }
 
   const isMyCode = myCode && code.length === 6 && code === myCode
-  const isAlreadyFollowing = false // RLS가 중복 insert를 막아주므로 별도 체크 생략
   const notFound = code.length === 6 && !isFetching && !foundUser
 
   return (
