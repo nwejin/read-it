@@ -38,6 +38,20 @@ export default function ProfilePage() {
     setTimeout(() => setCopied(false), 2000)
   }
 
+  // 카카오 공유 - 플랫폼 등록 후 활성화
+  // function handleShare() {
+  //   if (!userCode || !window.Kakao?.isInitialized()) return
+  //   window.Kakao.Share.sendDefault({
+  //     objectType: 'text',
+  //     text: `${nickname}님이 친구 코드를 공유했어요!\n\n코드: ${userCode}\n\n읽었나? 앱에서 친구 추가하고 서로의 서재를 구경해봐요 :)`,
+  //     link: {
+  //       mobileWebUrl: window.location.origin,
+  //       webUrl: window.location.origin,
+  //     },
+  //     buttonTitle: '읽었나? 열기',
+  //   })
+  // }
+
   async function handleLogout() {
     setLoading(true)
     const supabase = createClient()
@@ -74,17 +88,25 @@ export default function ProfilePage() {
         </div>
         <div className="py-4 border-b border-[#F0F0F0]">
           <p className="text-sm text-[#aaa] mb-2">내 코드</p>
-          <button
-            onClick={handleCopyCode}
-            className="flex items-center gap-3 active:scale-95 transition-transform"
-          >
+          <div className="flex items-center gap-3">
             <p className="text-2xl font-bold text-[#111] tracking-widest font-mono">
               {userCode || '------'}
             </p>
-            <span className="text-xs text-[#aaa] border border-[#E0E0E0] rounded-lg px-2 py-1">
-              {copied ? '복사됨 ✓' : '탭해서 복사'}
-            </span>
-          </button>
+            <button
+              onClick={handleCopyCode}
+              className="text-xs text-[#aaa] border border-[#E0E0E0] rounded-lg px-2 py-1 active:scale-95 transition-transform"
+            >
+              {copied ? '복사됨 ✓' : '복사'}
+            </button>
+            {/* 카카오 공유 버튼 - 플랫폼 등록 후 활성화
+            <button
+              onClick={handleShare}
+              className="text-xs bg-[#FEE500] text-[#3C1E1E] font-semibold rounded-lg px-2 py-1 active:scale-95 transition-transform"
+            >
+              카카오 공유
+            </button>
+            */}
+          </div>
           <p className="text-xs text-[#bbb] mt-2">친구에게 이 코드를 알려주세요</p>
         </div>
       </div>

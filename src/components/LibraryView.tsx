@@ -307,10 +307,10 @@ export default function LibraryView({ userId, isOwner, nickname }: LibraryViewPr
                   const ratedTotal = stats.ratingDist.reduce((a, b) => a + b, 0)
                   return (
                     <div key={star} className="flex items-center gap-3">
-                      <span className="text-sm text-[#555] w-6 shrink-0">{star}★</span>
+                      <span className="text-sm text-amber-400 w-6 shrink-0">{star}★</span>
                       <div className="flex-1 bg-[#F0F0F0] rounded-full h-2 overflow-hidden">
                         <div
-                          className="h-full bg-[#111] rounded-full transition-all duration-500"
+                          className="h-full bg-amber-400 rounded-full transition-all duration-500"
                           style={{ width: ratedTotal > 0 ? `${(count / ratedTotal) * 100}%` : '0%' }}
                         />
                       </div>
@@ -396,7 +396,7 @@ export default function LibraryView({ userId, isOwner, nickname }: LibraryViewPr
                         <span className="px-2.5 py-0.5 bg-[#F0F0F0] text-[#555] text-sm font-medium rounded-full">읽고 싶어요</span>
                       )}
                       {item.userBook.rating !== null && item.userBook.rating !== undefined && (
-                        <span className="px-2.5 py-0.5 bg-[#F0F0F0] text-[#555] text-sm font-medium rounded-full">
+                        <span className="px-2.5 py-0.5 bg-[#F0F0F0] text-amber-400 text-sm font-medium rounded-full">
                           {'★'.repeat(item.userBook.rating)}{'☆'.repeat(5 - item.userBook.rating)}
                         </span>
                       )}
