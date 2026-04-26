@@ -134,7 +134,7 @@ export default function BookStatusModal({
                   onClick={() => setRating((v) => (v === star ? null : star))}
                   className="text-xl leading-none transition-transform active:scale-90"
                 >
-                  <span className={rating !== null && star <= rating ? 'text-[#111]' : 'text-[#E0E0E0]'}>★</span>
+                  <span className={rating !== null && star <= rating ? 'text-amber-400' : 'text-[#E0E0E0]'}>★</span>
                 </button>
               ))}
             </div>

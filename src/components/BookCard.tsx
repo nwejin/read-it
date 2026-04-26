@@ -64,7 +64,7 @@ export default function BookCard({ book, userBook, onClick }: Props) {
               </span>
             )}
             {userBook.rating !== null && userBook.rating !== undefined && (
-              <span className="px-2.5 py-0.5 bg-[#F0F0F0] text-[#555] text-sm font-medium rounded-full">
+              <span className="px-2.5 py-0.5 bg-[#F0F0F0] text-amber-400 text-sm font-medium rounded-full">
                 {'★'.repeat(userBook.rating)}{'☆'.repeat(5 - userBook.rating)}
               </span>
             )}
