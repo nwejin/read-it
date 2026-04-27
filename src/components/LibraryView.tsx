@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useMemo } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
@@ -11,6 +11,13 @@ import BookStatusModal from '@/components/BookStatusModal'
 import { useUserBooks } from '@/hooks/useUserBooks'
 
 type Tab = 'owned' | 'not_owned' | 'read' | 'reading' | 'want_to_read'
+type SortKey = 'latest' | 'oldest' | 'title'
+
+const SORT_OPTIONS: { key: SortKey; label: string }[] = [
+  { key: 'latest', label: '최신순' },
+  { key: 'oldest', label: '오래된순' },
+  { key: 'title', label: '제목순' },
+]
 
 interface LibraryItem {
   userBook: UserBook
@@ -63,13 +70,13 @@ function toAladinBook(item: LibraryItem): AladinBook {
   }
 }
 
-async function fetchLibrary(tab: Tab, userId: string): Promise<LibraryItem[]> {
+async function fetchLibrary(tab: Tab, userId: string, sortKey: SortKey): Promise<LibraryItem[]> {
   const supabase = createClient()
   let query = supabase
     .from('user_books')
     .select('*, book:books(*)')
     .eq('user_id', userId)
-    .order('updated_at', { ascending: false })
+    .order('updated_at', { ascending: sortKey === 'oldest' })
 
   if (tab === 'owned') {
     query = query.eq('is_owned', true)
@@ -111,6 +118,7 @@ async function fetchStats(userId: string): Promise<StatsData> {
 export default function LibraryView({ userId, isOwner, nickname }: LibraryViewProps) {
   const router = useRouter()
   const [activeTab, setActiveTab] = useState<Tab>('owned')
+  const [sortKey, setSortKey] = useState<SortKey>('latest')
   const [showStats, setShowStats] = useState(false)
   const [selectedBook, setSelectedBook] = useState<AladinBook | null>(null)
   const [selectedUserBook, setSelectedUserBook] = useState<UserBook | null>(null)
@@ -120,11 +128,18 @@ export default function LibraryView({ userId, isOwner, nickname }: LibraryViewPr
   const touchStartY = useRef(0)
 
   const { data: items = [], isFetching } = useQuery({
-    queryKey: ['library', activeTab, userId],
-    queryFn: () => fetchLibrary(activeTab, userId),
+    queryKey: ['library', activeTab, userId, sortKey],
+    queryFn: () => fetchLibrary(activeTab, userId, sortKey),
     staleTime: 1000 * 60 * 2,
     enabled: !showStats,
   })
+
+  const sortedItems = useMemo(() => {
+    if (sortKey === 'title') {
+      return [...items].sort((a, b) => a.book.title.localeCompare(b.book.title, 'ko'))
+    }
+    return items
+  }, [items, sortKey])
 
   const { data: stats } = useQuery({
     queryKey: ['libraryStats', userId],
@@ -223,22 +238,37 @@ export default function LibraryView({ userId, isOwner, nickname }: LibraryViewPr
         </div>
 
         {!showStats && (
-          <div ref={tabBarRef} className="flex gap-6 overflow-x-auto scrollbar-none">
-            {TABS.map((tab) => (
-              <button
-                key={tab.key}
-                data-tab={tab.key}
-                onClick={() => handleTabChange(tab.key)}
-                className={`shrink-0 pb-3 text-base font-medium border-b-2 transition-colors ${
-                  activeTab === tab.key
-                    ? 'text-[#111] border-[#111]'
-                    : 'text-[#bbb] border-transparent'
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
+          <>
+            <div ref={tabBarRef} className="flex gap-6 overflow-x-auto scrollbar-none">
+              {TABS.map((tab) => (
+                <button
+                  key={tab.key}
+                  data-tab={tab.key}
+                  onClick={() => handleTabChange(tab.key)}
+                  className={`shrink-0 pb-3 text-base font-medium border-b-2 transition-colors ${
+                    activeTab === tab.key
+                      ? 'text-[#111] border-[#111]'
+                      : 'text-[#bbb] border-transparent'
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+            <div className="flex gap-3 px-0 py-2">
+              {SORT_OPTIONS.map((opt) => (
+                <button
+                  key={opt.key}
+                  onClick={() => setSortKey(opt.key)}
+                  className={`text-sm font-medium transition-colors ${
+                    sortKey === opt.key ? 'text-[#111]' : 'text-[#bbb]'
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </>
         )}
 
         {showStats && <div className="pb-3" />}
@@ -336,7 +366,7 @@ export default function LibraryView({ userId, isOwner, nickname }: LibraryViewPr
             <div className="flex justify-center py-20 text-[#888] text-base">불러오는 중...</div>
           )}
 
-          {!isFetching && items.length === 0 && (
+          {!isFetching && sortedItems.length === 0 && (
             <div className="flex flex-col items-center justify-center py-32 text-[#ccc]">
               <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10 mb-4" fill="none"
                 viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -344,12 +374,20 @@ export default function LibraryView({ userId, isOwner, nickname }: LibraryViewPr
                 <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
               </svg>
               <p className="text-base text-[#aaa]">아직 추가한 책이 없어요</p>
+              {isOwner && (
+                <button
+                  onClick={() => router.push('/search')}
+                  className="mt-5 px-5 py-2.5 bg-[#111] text-white text-sm font-semibold rounded-xl active:scale-[0.97] transition-all"
+                >
+                  책 추가하러 가기
+                </button>
+              )}
             </div>
           )}
 
-          {!isFetching && items.length > 0 && (
+          {!isFetching && sortedItems.length > 0 && (
             <div className="divide-y divide-[#F0F0F0]">
-              {items.map((item) => (
+              {sortedItems.map((item) => (
                 <button
                   key={item.userBook.id}
                   onClick={() => handleBookClick(item)}
