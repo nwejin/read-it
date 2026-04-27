@@ -6,6 +6,11 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '1.5',
+    date: '2026-04-27',
+    items: ['서재 정렬 기능 추가 (최신순 / 오래된순 / 제목순)', '메인 화면을 서재로 변경', '빈 서재에서 책 추가 바로가기 버튼 추가'],
+  },
+  {
     version: '1.4',
     date: '2026-04-24',
     items: ['친구 추가 기능 (6자리 코드로 팔로우)', '친구 서재 열람', '회원 탈퇴 기능'],

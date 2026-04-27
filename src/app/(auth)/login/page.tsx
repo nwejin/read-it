@@ -26,7 +26,7 @@ export default function LoginPage() {
       return
     }
 
-    router.push('/search')
+    router.push('/library')
     router.refresh()
   }
 
