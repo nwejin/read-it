@@ -12,7 +12,7 @@ export const CHANGELOG: ChangelogEntry[] = [
   },
   {
     version: '1.4',
-    date: '2026-04-24',
+    date: '2026-04-25',
     items: ['친구 추가 기능 (6자리 코드로 팔로우)', '친구 서재 열람', '회원 탈퇴 기능'],
   },
   {
