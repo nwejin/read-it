@@ -6,6 +6,7 @@ import { AladinBook, ReadStatus } from '@/types'
 import { useUserBooks } from '@/hooks/useUserBooks'
 import BookCard from '@/components/BookCard'
 import BookStatusModal from '@/components/BookStatusModal'
+import { BookCardSkeleton } from '@/components/Skeletons'
 
 async function fetchBooks(query: string): Promise<AladinBook[]> {
   const res = await fetch(`/api/books/search?q=${encodeURIComponent(query)}`)
@@ -119,7 +120,9 @@ export default function SearchPage() {
       {/* 목록 */}
       <div className="px-5">
         {isFetching && (
-          <div className="flex justify-center py-20 text-[#888] text-base">불러오는 중...</div>
+          <div className="divide-y divide-[#F0F0F0]">
+            {Array.from({ length: 6 }).map((_, i) => <BookCardSkeleton key={i} />)}
+          </div>
         )}
 
         {!isFetching && isSearching && searchResults.length === 0 && (

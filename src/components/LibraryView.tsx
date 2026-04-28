@@ -8,6 +8,7 @@ import gsap from 'gsap'
 import { createClient } from '@/lib/supabase/client'
 import { AladinBook, ReadStatus, UserBook } from '@/types'
 import BookStatusModal from '@/components/BookStatusModal'
+import { BookCardSkeleton } from '@/components/Skeletons'
 import { useUserBooks } from '@/hooks/useUserBooks'
 
 type Tab = 'owned' | 'not_owned' | 'read' | 'reading' | 'want_to_read'
@@ -363,7 +364,9 @@ export default function LibraryView({ userId, isOwner, nickname }: LibraryViewPr
           onTouchEnd={handleTouchEnd}
         >
           {isFetching && (
-            <div className="flex justify-center py-20 text-[#888] text-base">불러오는 중...</div>
+            <div className="divide-y divide-[#F0F0F0]">
+              {Array.from({ length: 5 }).map((_, i) => <BookCardSkeleton key={i} />)}
+            </div>
           )}
 
           {!isFetching && sortedItems.length === 0 && (

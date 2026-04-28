@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useFollowing, useFollowMutations } from '@/hooks/useFriends'
 import AddFriendSheet from '@/components/AddFriendSheet'
+import { FriendItemSkeleton } from '@/components/Skeletons'
 
 export default function FriendsPage() {
   const router = useRouter()
@@ -30,7 +31,9 @@ export default function FriendsPage() {
 
       {/* 친구 목록 */}
       {isLoading && (
-        <div className="flex justify-center py-20 text-[#888] text-base">불러오는 중...</div>
+        <div className="divide-y divide-[#F0F0F0]">
+          {Array.from({ length: 3 }).map((_, i) => <FriendItemSkeleton key={i} />)}
+        </div>
       )}
 
       {!isLoading && friends.length === 0 && (
