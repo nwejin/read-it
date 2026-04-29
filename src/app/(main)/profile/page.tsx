@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { CHANGELOG } from '@/lib/changelog'
@@ -18,6 +19,9 @@ export default function ProfilePage() {
   const [editingNickname, setEditingNickname] = useState(false)
   const [nicknameInput, setNicknameInput] = useState('')
   const [savingNickname, setSavingNickname] = useState(false)
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
+  const [uploadingAvatar, setUploadingAvatar] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     const supabase = createClient()
@@ -26,11 +30,12 @@ export default function ProfilePage() {
       setEmail(user.email ?? '')
       const { data } = await supabase
         .from('profiles')
-        .select('nickname, user_code')
+        .select('nickname, user_code, avatar_url')
         .eq('id', user.id)
         .single()
       setNickname(data?.nickname ?? user.user_metadata?.nickname ?? '')
       setUserCode(data?.user_code ?? '')
+      setAvatarUrl(data?.avatar_url ?? null)
     })
   }, [])
 
@@ -54,6 +59,25 @@ export default function ProfilePage() {
   //     buttonTitle: '읽었나? 열기',
   //   })
   // }
+
+  async function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setUploadingAvatar(true)
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (user) {
+      const ext = file.name.split('.').pop()
+      const path = `${user.id}-${Date.now()}.${ext}`
+      const { error } = await supabase.storage.from('avatars').upload(path, file, { upsert: true })
+      if (!error) {
+        const { data: { publicUrl } } = supabase.storage.from('avatars').getPublicUrl(path)
+        await supabase.from('profiles').update({ avatar_url: publicUrl }).eq('id', user.id)
+        setAvatarUrl(publicUrl)
+      }
+    }
+    setUploadingAvatar(false)
+  }
 
   async function handleSaveNickname() {
     const trimmed = nicknameInput.trim()
@@ -93,6 +117,49 @@ export default function ProfilePage() {
   return (
     <div className="max-w-lg mx-auto px-5 pt-14">
       <h1 className="text-3xl font-bold text-[#111] tracking-tight mb-8">프로필</h1>
+
+      {/* 아바타 */}
+      <div className="flex justify-center mb-8">
+        <div className="relative">
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            disabled={uploadingAvatar}
+            className="active:scale-95 transition-transform disabled:opacity-60"
+          >
+            <div className="w-20 h-20 rounded-full bg-[#111] overflow-hidden flex items-center justify-center relative">
+              {avatarUrl ? (
+                <Image src={avatarUrl} alt="프로필" fill className="object-cover" sizes="80px" />
+              ) : (
+                <span className="text-white text-2xl font-bold">
+                  {nickname.slice(0, 1).toUpperCase()}
+                </span>
+              )}
+            </div>
+          </button>
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            disabled={uploadingAvatar}
+            className="absolute bottom-0 right-0 w-6 h-6 bg-white border border-[#E0E0E0] rounded-full flex items-center justify-center shadow-sm active:scale-90 transition-transform disabled:opacity-40"
+          >
+            {uploadingAvatar ? (
+              <span className="w-3 h-3 border-2 border-[#aaa] border-t-transparent rounded-full animate-spin" />
+            ) : (
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3 text-[#555]" fill="none"
+                viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            )}
+          </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleAvatarChange}
+          />
+        </div>
+      </div>
 
       <div className="mb-6">
         <div className="py-4 border-b border-[#F0F0F0]">

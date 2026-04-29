@@ -10,7 +10,7 @@ async function fetchFollowing(): Promise<FriendEntry[]> {
   if (!user) return []
   const { data } = await supabase
     .from('friendships')
-    .select('id, following_id, created_at, following:profiles!following_id(id, nickname, user_code, created_at)')
+    .select('id, following_id, created_at, following:profiles!following_id(id, nickname, user_code, avatar_url, created_at)')
     .eq('follower_id', user.id)
     .order('created_at', { ascending: false })
   return (data ?? []) as unknown as FriendEntry[]
@@ -20,7 +20,7 @@ async function fetchUserByCode(code: string): Promise<Profile | null> {
   const supabase = createClient()
   const { data } = await supabase
     .from('profiles')
-    .select('id, nickname, user_code, created_at')
+    .select('id, nickname, user_code, avatar_url, created_at')
     .eq('user_code', code)
     .single()
   return data ?? null

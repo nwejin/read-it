@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useFollowing, useFollowMutations } from '@/hooks/useFriends'
+import Image from 'next/image'
 import AddFriendSheet from '@/components/AddFriendSheet'
 import { FriendItemSkeleton } from '@/components/Skeletons'
 
@@ -63,8 +64,14 @@ export default function FriendsPage() {
                 onClick={() => router.push(`/friends/${friend.following_id}`)}
                 className="flex-1 flex items-center gap-4 text-left active:opacity-70 transition-opacity"
               >
-                <div className="w-11 h-11 rounded-full bg-[#111] flex items-center justify-center text-white text-base font-bold shrink-0">
-                  {friend.following.nickname.slice(0, 1).toUpperCase()}
+                <div className="relative w-11 h-11 rounded-full bg-[#111] overflow-hidden flex items-center justify-center shrink-0">
+                  {friend.following.avatar_url ? (
+                    <Image src={friend.following.avatar_url} alt={friend.following.nickname} fill className="object-cover" sizes="44px" />
+                  ) : (
+                    <span className="text-white text-base font-bold">
+                      {friend.following.nickname.slice(0, 1).toUpperCase()}
+                    </span>
+                  )}
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-base font-semibold text-[#111]">{friend.following.nickname}</p>
