@@ -15,6 +15,9 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(false)
   const [showWithdraw, setShowWithdraw] = useState(false)
   const [withdrawing, setWithdrawing] = useState(false)
+  const [editingNickname, setEditingNickname] = useState(false)
+  const [nicknameInput, setNicknameInput] = useState('')
+  const [savingNickname, setSavingNickname] = useState(false)
 
   useEffect(() => {
     const supabase = createClient()
@@ -52,6 +55,20 @@ export default function ProfilePage() {
   //   })
   // }
 
+  async function handleSaveNickname() {
+    const trimmed = nicknameInput.trim()
+    if (!trimmed || trimmed === nickname) { setEditingNickname(false); return }
+    setSavingNickname(true)
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (user) {
+      await supabase.from('profiles').update({ nickname: trimmed }).eq('id', user.id)
+      setNickname(trimmed)
+    }
+    setSavingNickname(false)
+    setEditingNickname(false)
+  }
+
   async function handleLogout() {
     setLoading(true)
     const supabase = createClient()
@@ -80,7 +97,41 @@ export default function ProfilePage() {
       <div className="mb-6">
         <div className="py-4 border-b border-[#F0F0F0]">
           <p className="text-sm text-[#aaa] mb-1">닉네임</p>
-          <p className="text-base font-medium text-[#111]">{nickname || '-'}</p>
+          {editingNickname ? (
+            <div className="flex items-center gap-2 mt-1">
+              <input
+                type="text"
+                value={nicknameInput}
+                onChange={(e) => setNicknameInput(e.target.value)}
+                maxLength={20}
+                autoFocus
+                className="flex-1 text-base font-medium text-[#111] bg-[#F7F7F7] rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-[#111]"
+              />
+              <button
+                onClick={handleSaveNickname}
+                disabled={savingNickname}
+                className="text-sm font-semibold text-[#111] disabled:opacity-40"
+              >
+                저장
+              </button>
+              <button
+                onClick={() => setEditingNickname(false)}
+                className="text-sm text-[#aaa]"
+              >
+                취소
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center justify-between mt-1">
+              <p className="text-base font-medium text-[#111]">{nickname || '-'}</p>
+              <button
+                onClick={() => { setNicknameInput(nickname); setEditingNickname(true) }}
+                className="text-xs text-[#aaa] border border-[#E0E0E0] rounded-lg px-2 py-1"
+              >
+                수정
+              </button>
+            </div>
+          )}
         </div>
         <div className="py-4 border-b border-[#F0F0F0]">
           <p className="text-sm text-[#aaa] mb-1">이메일</p>
