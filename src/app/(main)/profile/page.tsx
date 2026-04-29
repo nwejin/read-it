@@ -134,22 +134,26 @@ export default function ProfilePage() {
         />
       )}
 
-      <div className="mt-10">
-        <h2 className="text-lg font-bold text-[#111] mb-4">업데이트 내역</h2>
-        <div className="space-y-4">
-          {CHANGELOG.map((entry) => (
-            <div key={entry.version} className="py-4 border-b border-[#F0F0F0]">
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-sm font-semibold text-[#111]">v{entry.version}</span>
-                <span className="text-xs text-[#aaa]">{entry.date}</span>
-              </div>
-              <ul className="space-y-0.5">
-                {entry.items.map((item) => (
-                  <li key={item} className="text-sm text-[#888]">• {item}</li>
-                ))}
-              </ul>
-            </div>
-          ))}
+      <div className="mt-10 pb-10">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-bold text-[#111]">업데이트 내역</h2>
+          <button
+            onClick={() => router.push('/changelog')}
+            className="text-sm text-[#aaa]"
+          >
+            전체 보기 →
+          </button>
+        </div>
+        <div className="py-4 border-b border-[#F0F0F0]">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-sm font-semibold text-[#111]">v{CHANGELOG[0].version}</span>
+            <span className="text-xs text-[#aaa]">{CHANGELOG[0].date}</span>
+          </div>
+          <ul className="space-y-0.5">
+            {CHANGELOG[0].items.map((item) => (
+              <li key={item} className="text-sm text-[#888]">• {item}</li>
+            ))}
+          </ul>
         </div>
       </div>
     </div>
