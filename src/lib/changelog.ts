@@ -8,7 +8,7 @@ export const CHANGELOG: ChangelogEntry[] = [
   {
     version: '1.6',
     date: '2026-04-29',
-    items: ['업데이트 내역 전체 보기 페이지 추가 (아코디언)'],
+    items: ['업데이트 내역 전체 보기 페이지 추가 (아코디언)', '프로필 닉네임 수정 기능 추가'],
   },
   {
     version: '1.5',
