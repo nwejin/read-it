@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import gsap from 'gsap';
+import { Pencil } from 'lucide-react';
 import { AladinBook, ReadStatus, UserBook } from '@/types';
 
 interface Props {
@@ -89,7 +90,7 @@ export default function BookStatusModal({
               <Image src={book.cover} alt={book.title} fill sizes="48px" className="object-cover" />
             </div>
           )}
-          <div className="min-w-0 flex flex-col justify-center">
+          <div className="min-w-0 flex flex-col justify-center w-full">
             <h3 className="text-lg font-semibold text-[#111] leading-snug line-clamp-2">{book.title}</h3>
             <p className="text-sm text-[#888] mt-0.5">{book.author}</p>
             <p className="text-sm text-[#aaa]">{book.publisher}</p>
@@ -97,10 +98,10 @@ export default function BookStatusModal({
               <Link href={`/book/${book.isbn13}`} className="text-sm text-[#aaa] underline">
                 자세히 보기 →
               </Link>
-              <Link href={`/book/${book.isbn13}/memo`} className="flex items-center justify-center w-8 h-8 rounded-full bg-[#F0F0F0] text-[#555] active:bg-[#E0E0E0] shrink-0">
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828a2 2 0 01-1.414.586H8v-2.414a2 2 0 01.586-1.414z" />
-                </svg>
+              <Link
+                href={`/book/${book.isbn13}/memo`}
+                className="flex items-center justify-center w-8 h-8 rounded-full bg-[#F0F0F0] text-[#555] active:bg-[#E0E0E0] shrink-0">
+                <Pencil className="w-4 h-4" strokeWidth={2} />
               </Link>
             </div>
           </div>
@@ -134,13 +135,13 @@ export default function BookStatusModal({
         <div className="pb-6 mb-6 border-b border-[#F0F0F0]">
           <div className="flex items-center justify-between mb-2">
             <p className="text-sm font-medium text-[#888]">읽기 상태</p>
-            <div className={`flex items-center gap-1 transition-all duration-200 ${readStatus === 'read' ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+            <div
+              className={`flex items-center gap-1 transition-all duration-200 ${readStatus === 'read' ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
                   key={star}
                   onClick={() => setRating((v) => (v === star ? null : star))}
-                  className="text-xl leading-none transition-transform active:scale-90"
-                >
+                  className="text-xl leading-none transition-transform active:scale-90">
                   <span className={rating !== null && star <= rating ? 'text-amber-400' : 'text-[#E0E0E0]'}>★</span>
                 </button>
               ))}
@@ -160,9 +161,9 @@ export default function BookStatusModal({
               <button
                 key={opt.value}
                 onClick={() => {
-                  const next = readStatus === opt.value ? null : opt.value
-                  setReadStatus(next)
-                  if (next !== 'read') setRating(null)
+                  const next = readStatus === opt.value ? null : opt.value;
+                  setReadStatus(next);
+                  if (next !== 'read') setRating(null);
                 }}
                 className={`relative z-10 flex-1 py-3 text-sm font-medium transition-colors duration-200 ${readStatus === opt.value ? 'text-white' : 'text-[#555]'}`}>
                 {opt.label}

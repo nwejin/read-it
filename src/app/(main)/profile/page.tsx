@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import { Camera, Link2 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { CHANGELOG } from '@/lib/changelog'
 import WithdrawModal from '@/components/WithdrawModal'
@@ -145,11 +146,7 @@ export default function ProfilePage() {
             {uploadingAvatar ? (
               <span className="w-3 h-3 border-2 border-[#aaa] border-t-transparent rounded-full animate-spin" />
             ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3 text-[#555]" fill="none"
-                viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
+              <Camera className="w-3 h-3 text-[#555]" strokeWidth={2} />
             )}
           </button>
           <input
@@ -214,9 +211,10 @@ export default function ProfilePage() {
           </div>
           <button
             onClick={handleCopyCode}
-            className="w-full py-3 bg-[#111] text-white text-sm font-semibold rounded-xl active:scale-95 transition-transform"
+            className="w-full flex items-center justify-center gap-1.5 py-3 bg-[#111] text-white text-sm font-semibold rounded-xl active:scale-95 transition-transform"
           >
-            {copied ? '링크 복사됨 ✓' : '🔗 초대 링크 복사'}
+            {!copied && <Link2 className="w-4 h-4" strokeWidth={2.5} />}
+            {copied ? '복사됨 ✓' : '초대 링크 복사'}
           </button>
           <p className="text-xs text-[#888] text-center mt-2">링크를 친구에게 공유하면 양쪽 모두 자동으로 친구 추가돼요</p>
         </div>

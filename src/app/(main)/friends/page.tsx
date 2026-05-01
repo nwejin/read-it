@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useFollowing, useUnfollowMutation, useMarkFriendsRead, useDismissRemovedFriend } from '@/hooks/useFriends'
 import Image from 'next/image'
+import { Link2, Users, X, ChevronRight } from 'lucide-react'
 import { FriendItemSkeleton } from '@/components/Skeletons'
 import { FriendEntry } from '@/types'
 
@@ -55,11 +56,8 @@ export default function FriendsPage() {
           onClick={handleShareLink}
           className="flex items-center gap-1.5 px-3.5 py-2 bg-[#111] text-white text-sm font-semibold rounded-xl active:scale-95 transition-transform"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none"
-            viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-          </svg>
-          {linkCopied ? '복사됨 ✓' : '링크 공유'}
+          <Link2 className="w-4 h-4" strokeWidth={2.5} />
+          {linkCopied ? '복사됨 ✓' : '초대 링크 복사'}
         </button>
       </div>
 
@@ -73,19 +71,9 @@ export default function FriendsPage() {
       {/* 빈 상태 */}
       {!isLoading && friends.length === 0 && (
         <div className="flex flex-col items-center justify-center py-32 text-[#ccc]">
-          <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10 mb-4" fill="none"
-            viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-            <path strokeLinecap="round" strokeLinejoin="round"
-              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
-          </svg>
+          <Users className="w-10 h-10 mb-4" strokeWidth={1.5} />
           <p className="text-base text-[#aaa] mb-1">아직 친구가 없어요</p>
           <p className="text-sm text-[#ccc]">초대 링크를 공유해서 친구를 추가해보세요</p>
-          <button
-            onClick={handleShareLink}
-            className="mt-6 px-5 py-3 bg-[#111] text-white text-sm font-semibold rounded-xl active:scale-95 transition-transform"
-          >
-            {linkCopied ? '링크 복사됨 ✓' : '초대 링크 복사'}
-          </button>
         </div>
       )}
 
@@ -111,20 +99,14 @@ export default function FriendsPage() {
                   <p className="text-base font-semibold text-[#111]">{friend.following.nickname}</p>
                   <p className="text-xs text-[#aaa] font-mono">{friend.following.user_code}</p>
                 </div>
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-[#ddd] shrink-0" fill="none"
-                  viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                </svg>
+                <ChevronRight className="w-4 h-4 text-[#ddd] shrink-0" strokeWidth={2} />
               </button>
 
               <button
                 onClick={() => setConfirmFriend(friend)}
                 className="shrink-0 text-[#ccc] p-1 active:text-red-400 transition-colors"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none"
-                  viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
+                <X className="w-4 h-4" strokeWidth={2} />
               </button>
             </div>
           ))}

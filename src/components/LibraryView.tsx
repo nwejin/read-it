@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
 import gsap from 'gsap'
+import { ChevronLeft, ChevronRight, BarChart3, BookOpen } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { AladinBook, ReadStatus, UserBook } from '@/types'
 import BookStatusModal from '@/components/BookStatusModal'
@@ -217,10 +218,7 @@ export default function LibraryView({ userId, isOwner, nickname }: LibraryViewPr
                 onClick={() => router.back()}
                 className="text-[#111] -ml-1 p-1"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none"
-                  viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-                </svg>
+                <ChevronLeft className="w-5 h-5" strokeWidth={2} />
               </button>
             )}
             <h1 className="text-3xl font-bold text-[#111] tracking-tight">
@@ -231,10 +229,7 @@ export default function LibraryView({ userId, isOwner, nickname }: LibraryViewPr
             onClick={() => setShowStats((v) => !v)}
             className={`p-1.5 rounded-lg transition-colors ${showStats ? 'bg-[#111] text-white' : 'text-[#aaa]'}`}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none"
-              viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-            </svg>
+            <BarChart3 className="w-5 h-5" strokeWidth={2} />
           </button>
         </div>
 
@@ -371,11 +366,7 @@ export default function LibraryView({ userId, isOwner, nickname }: LibraryViewPr
 
           {!isFetching && sortedItems.length === 0 && (
             <div className="flex flex-col items-center justify-center py-32 text-[#ccc]">
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10 mb-4" fill="none"
-                viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
-              </svg>
+              <BookOpen className="w-10 h-10 mb-4" strokeWidth={1.5} />
               <p className="text-base text-[#aaa]">아직 추가한 책이 없어요</p>
               {isOwner && (
                 <button
@@ -445,10 +436,7 @@ export default function LibraryView({ userId, isOwner, nickname }: LibraryViewPr
                   </div>
 
                   <div className="shrink-0 self-center text-[#ddd]">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none"
-                      viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                    </svg>
+                    <ChevronRight className="w-4 h-4" strokeWidth={2} />
                   </div>
                 </button>
               ))}

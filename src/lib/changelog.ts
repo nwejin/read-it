@@ -1,8 +1,8 @@
 export type ChangelogEntry = {
-  version: string
-  date: string
-  items: string[]
-}
+  version: string;
+  date: string;
+  items: string[];
+};
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
@@ -12,18 +12,27 @@ export const CHANGELOG: ChangelogEntry[] = [
       '친구 추가 방식 변경 — 초대 링크 공유로 양방향 자동 등록',
       '새 친구 생기면 친구 탭에 빨간 점 알림 표시',
       '친구 삭제 시 상대방 목록에 삭제 알림 카드 표시',
-      '책 메모 기능 추가 — 필사·감상·아이디어를 자유롭게 기록 (2026-05-01)',
+      '책 메모 기능 추가 — 필사·감상·아이디어를 자유롭게 기록 (2026-05-01) - 선화 작업',
     ],
   },
   {
     version: '1.6',
     date: '2026-04-29',
-    items: ['업데이트 내역 전체 보기 페이지 추가 (아코디언)', '프로필 닉네임 수정 기능 추가', '프로필 이미지 업로드 기능 추가'],
+    items: [
+      '업데이트 내역 전체 보기 페이지 추가 (아코디언)',
+      '프로필 닉네임 수정 기능 추가',
+      '프로필 이미지 업로드 기능 추가',
+    ],
   },
   {
     version: '1.5',
     date: '2026-04-27',
-    items: ['서재 정렬 기능 추가 (최신순 / 오래된순 / 제목순)', '메인 화면을 서재로 변경', '빈 서재에서 책 추가 바로가기 버튼 추가', '서재/검색/친구 로딩 스켈레톤 추가 (2026-04-28)'],
+    items: [
+      '서재 정렬 기능 추가 (최신순 / 오래된순 / 제목순)',
+      '메인 화면을 서재로 변경',
+      '빈 서재에서 책 추가 바로가기 버튼 추가',
+      '서재/검색/친구 로딩 스켈레톤 추가 (2026-04-28)',
+    ],
   },
   {
     version: '1.4',
@@ -38,7 +47,12 @@ export const CHANGELOG: ChangelogEntry[] = [
   {
     version: '1.2',
     date: '2026-04-20',
-    items: ['보유/읽기 상태 UI 개선 (슬라이드 선택)', '미보유 서재 탭 추가', '읽은 책 별점 기능 추가', '서재 탭 스와이프 전환'],
+    items: [
+      '보유/읽기 상태 UI 개선 (슬라이드 선택)',
+      '미보유 서재 탭 추가',
+      '읽은 책 별점 기능 추가',
+      '서재 탭 스와이프 전환',
+    ],
   },
   {
     version: '1.1',
@@ -50,6 +64,6 @@ export const CHANGELOG: ChangelogEntry[] = [
     date: '2026-04-01',
     items: ['책 검색 및 서재 추가', '독서 상태 관리'],
   },
-]
+];
 
-export const LATEST_VERSION = CHANGELOG[0].version
+export const LATEST_VERSION = CHANGELOG[0].version;

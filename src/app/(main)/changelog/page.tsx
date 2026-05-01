@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { ChevronLeft, ChevronDown } from 'lucide-react'
 import { CHANGELOG } from '@/lib/changelog'
 
 export default function ChangelogPage() {
@@ -25,10 +26,7 @@ export default function ChangelogPage() {
           onClick={() => router.back()}
           className="text-[#111] -ml-1 p-1"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none"
-            viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-          </svg>
+          <ChevronLeft className="w-5 h-5" strokeWidth={2} />
         </button>
         <h1 className="text-3xl font-bold text-[#111] tracking-tight">업데이트 내역</h1>
       </div>
@@ -46,13 +44,10 @@ export default function ChangelogPage() {
                   <span className="text-sm font-semibold text-[#111]">v{entry.version}</span>
                   <span className="text-xs text-[#aaa]">{entry.date}</span>
                 </div>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
+                <ChevronDown
                   className={`w-4 h-4 text-[#ccc] transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
-                  fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                </svg>
+                  strokeWidth={2}
+                />
               </button>
               {isOpen && (
                 <ul className="pb-4 space-y-0.5">
