@@ -93,9 +93,16 @@ export default function BookStatusModal({
             <h3 className="text-lg font-semibold text-[#111] leading-snug line-clamp-2">{book.title}</h3>
             <p className="text-sm text-[#888] mt-0.5">{book.author}</p>
             <p className="text-sm text-[#aaa]">{book.publisher}</p>
-            <Link href={`/book/${book.isbn13}`} className="text-sm text-[#aaa] underline mt-1.5 inline-block">
-              자세히 보기 →
-            </Link>
+            <div className="flex items-center justify-between mt-1.5">
+              <Link href={`/book/${book.isbn13}`} className="text-sm text-[#aaa] underline">
+                자세히 보기 →
+              </Link>
+              <Link href={`/book/${book.isbn13}/memo`} className="flex items-center justify-center w-8 h-8 rounded-full bg-[#F0F0F0] text-[#555] active:bg-[#E0E0E0] shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828a2 2 0 01-1.414.586H8v-2.414a2 2 0 01.586-1.414z" />
+                </svg>
+              </Link>
+            </div>
           </div>
         </div>
 

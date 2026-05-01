@@ -67,3 +67,14 @@ export interface AladinBook {
 export interface BookWithStatus extends AladinBook {
   userBook?: UserBook | null
 }
+
+export interface BookMemo {
+  id: string
+  user_id: string
+  isbn13: string
+  pages: string[]
+  font_size: number
+  font_color: string
+  created_at: string
+  updated_at: string
+}
