@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useNewFriendCount } from '@/hooks/useFriends'
 
 const tabs = [
   {
@@ -58,6 +59,7 @@ const tabs = [
 
 export default function BottomNav() {
   const pathname = usePathname()
+  const { data: newFriendCount = 0 } = useNewFriendCount()
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-[#F0F0F0]">
@@ -72,7 +74,12 @@ export default function BottomNav() {
                 active ? 'text-[#111]' : 'text-[#bbb]'
               }`}
             >
-              {tab.icon(active)}
+              <div className="relative">
+                {tab.icon(active)}
+                {tab.href === '/friends' && newFriendCount > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-red-500 rounded-full" />
+                )}
+              </div>
               {tab.label}
             </Link>
           )

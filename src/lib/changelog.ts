@@ -6,6 +6,15 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '1.7',
+    date: '2026-05-01',
+    items: [
+      '친구 추가 방식 변경 — 초대 링크 공유로 양방향 자동 등록',
+      '새 친구 생기면 친구 탭에 빨간 점 알림 표시',
+      '친구 삭제 시 상대방 목록에 삭제 알림 카드 표시',
+    ],
+  },
+  {
     version: '1.6',
     date: '2026-04-29',
     items: ['업데이트 내역 전체 보기 페이지 추가 (아코디언)', '프로필 닉네임 수정 기능 추가', '프로필 이미지 업로드 기능 추가'],
