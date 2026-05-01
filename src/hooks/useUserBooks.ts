@@ -12,9 +12,12 @@ export function useUserBooks(isbn13s: string[]) {
     queryKey: ['userBooks', isbn13s],
     queryFn: async () => {
       if (isbn13s.length === 0) return {}
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return {}
       const { data } = await supabase
         .from('user_books')
         .select('*')
+        .eq('user_id', user.id)
         .in('isbn13', isbn13s)
 
       const map: Record<string, UserBook> = {}
