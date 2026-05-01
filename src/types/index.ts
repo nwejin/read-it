@@ -4,6 +4,7 @@ export interface Profile {
   id: string
   nickname: string
   user_code: string
+  avatar_url: string | null
   created_at: string
 }
 
