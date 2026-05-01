@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import gsap from 'gsap';
+import { Link2Off } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { Profile } from '@/types';
 
@@ -32,8 +33,14 @@ export default function InvitePage() {
           .from('profiles')
           .select('id, nickname, user_code, avatar_url, created_at')
           .eq('user_code', code?.toUpperCase() ?? '')
-          .single(),
+          .maybeSingle(),
       ]);
+
+      if (!user) {
+        setState('unauthenticated');
+        if (profile) setInviter(profile);
+        return;
+      }
 
       if (!profile) {
         setState('not_found');
@@ -41,11 +48,6 @@ export default function InvitePage() {
       }
 
       setInviter(profile);
-
-      if (!user) {
-        setState('unauthenticated');
-        return;
-      }
 
       if (profile.id === user.id) {
         setState('self');
@@ -117,9 +119,23 @@ export default function InvitePage() {
 
         {state === 'not_found' && (
           <div className="text-center">
-            <p className="text-4xl mb-4">🔗</p>
-            <p className="text-lg font-bold text-[#111] mb-2">유효하지 않은 초대 링크예요</p>
-            <p className="text-sm text-[#aaa]">링크가 올바른지 확인해보세요</p>
+            <div className="flex justify-center mb-4">
+              <Link2Off size={48} strokeWidth={1.5} className="text-[#111]" />
+            </div>
+            <p className="text-2xl font-bold text-[#111] mb-2">유효하지 않은 초대 링크예요</p>
+            <p className="text-base text-[#888]">링크가 올바른지 확인해보세요</p>
+          </div>
+        )}
+
+        {state === 'unauthenticated' && !inviter && (
+          <div className="text-center p-6">
+            <p className="text-xl font-bold text-[#111] mb-2">로그인이 필요해요</p>
+            <p className="text-sm text-[#888] mb-6">로그인하고 친구 초대를 수락해보세요</p>
+            <button
+              onClick={handleLoginRedirect}
+              className="w-full py-4 bg-[#111] text-white text-base font-semibold rounded-xl active:scale-95 transition-transform">
+              로그인하고 친구 추가
+            </button>
           </div>
         )}
 
