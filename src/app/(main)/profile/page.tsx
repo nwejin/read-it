@@ -41,7 +41,8 @@ export default function ProfilePage() {
 
   async function handleCopyCode() {
     if (!userCode) return
-    await navigator.clipboard.writeText(userCode)
+    const link = `${window.location.origin}/invite/${userCode}`
+    await navigator.clipboard.writeText(link)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }
@@ -206,26 +207,18 @@ export default function ProfilePage() {
         </div>
         <div className="py-4 border-b border-[#F0F0F0]">
           <p className="text-sm text-[#aaa] mb-2">내 코드</p>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 mb-3">
             <p className="text-2xl font-bold text-[#111] tracking-widest font-mono">
               {userCode || '------'}
             </p>
-            <button
-              onClick={handleCopyCode}
-              className="text-xs text-[#aaa] border border-[#E0E0E0] rounded-lg px-2 py-1 active:scale-95 transition-transform"
-            >
-              {copied ? '복사됨 ✓' : '복사'}
-            </button>
-            {/* 카카오 공유 버튼 - 플랫폼 등록 후 활성화
-            <button
-              onClick={handleShare}
-              className="text-xs bg-[#FEE500] text-[#3C1E1E] font-semibold rounded-lg px-2 py-1 active:scale-95 transition-transform"
-            >
-              카카오 공유
-            </button>
-            */}
           </div>
-          <p className="text-xs text-[#bbb] mt-2">친구에게 이 코드를 알려주세요</p>
+          <button
+            onClick={handleCopyCode}
+            className="w-full py-3 bg-[#111] text-white text-sm font-semibold rounded-xl active:scale-95 transition-transform"
+          >
+            {copied ? '링크 복사됨 ✓' : '🔗 초대 링크 복사'}
+          </button>
+          <p className="text-xs text-[#888] text-center mt-2">링크를 친구에게 공유하면 양쪽 모두 자동으로 친구 추가돼요</p>
         </div>
       </div>
 

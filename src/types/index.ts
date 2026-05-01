@@ -8,16 +8,22 @@ export interface Profile {
   created_at: string
 }
 
+export type FriendshipStatus = 'active' | 'removed'
+
 export interface Friendship {
   id: string
   follower_id: string
   following_id: string
+  is_new: boolean
+  status: FriendshipStatus
   created_at: string
 }
 
 export interface FriendEntry {
   id: string
   following_id: string
+  is_new: boolean
+  status: FriendshipStatus
   created_at: string
   following: Profile
 }
