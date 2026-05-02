@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
 import gsap from 'gsap'
-import { ChevronLeft, ChevronRight, BarChart3, BookOpen, Search, X } from 'lucide-react'
+import { ChevronLeft, ChevronRight, BarChart3, BookOpen, Search, X, Pencil } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { AladinBook, ReadStatus, UserBook } from '@/types'
 import BookStatusModal from '@/components/BookStatusModal'
@@ -23,6 +23,7 @@ const SORT_OPTIONS: { key: SortKey; label: string }[] = [
 
 interface LibraryItem {
   userBook: UserBook
+  hasMemo: boolean
   book: {
     isbn13: string
     title: string
@@ -89,7 +90,20 @@ async function fetchLibrary(tab: Tab, userId: string, sortKey: SortKey): Promise
   }
 
   const { data } = await query
-  return (data ?? []).map((d) => ({ userBook: d as UserBook, book: d.book }))
+  const items = data ?? []
+
+  const isbn13s = items.map((d) => d.isbn13)
+  const { data: memos } = isbn13s.length > 0
+    ? await supabase.from('book_memos').select('isbn13').eq('user_id', userId).in('isbn13', isbn13s)
+    : { data: [] }
+
+  const memoSet = new Set((memos ?? []).map((m) => m.isbn13))
+
+  return items.map((d) => ({
+    userBook: d as UserBook,
+    book: d.book,
+    hasMemo: memoSet.has(d.isbn13),
+  }))
 }
 
 async function fetchStats(userId: string): Promise<StatsData> {
@@ -226,9 +240,9 @@ export default function LibraryView({ userId, isOwner, nickname }: LibraryViewPr
     }
   }
 
-  async function handleSaveStatus(isOwned: boolean, readStatus: ReadStatus | null, rating: number | null) {
+  async function handleSaveStatus(isOwned: boolean, readStatus: ReadStatus | null, rating: number | null, readAt: string | null) {
     if (!selectedBook) return
-    await upsertUserBook({ book: selectedBook, isOwned, readStatus, rating })
+    await upsertUserBook({ book: selectedBook, isOwned, readStatus, rating, readAt })
   }
 
   return (
@@ -489,7 +503,17 @@ export default function LibraryView({ userId, isOwner, nickname }: LibraryViewPr
                       {item.userBook.rating !== null && item.userBook.rating !== undefined && (
                         <span className="px-2.5 py-0.5 bg-[#F0F0F0] text-amber-400 text-sm font-medium rounded-full">
                           {'★'.repeat(item.userBook.rating)}{'☆'.repeat(5 - item.userBook.rating)}
+                          {item.userBook.read_at && (
+                            <span className="text-[#bbb] ml-1">
+                              · {item.userBook.read_at.slice(0, 10).replace(/-/g, '.')}
+                            </span>
+                          )}
                         </span>
+                      )}
+                      {item.hasMemo && (
+                        <span className="flex items-center gap-1 px-2.5 py-0.5 bg-[#111] text-white text-sm font-medium rounded-full">
+                          <Pencil className="w-3 h-3" strokeWidth={2} />
+                          메모</span>
                       )}
                     </div>
                   </div>
