@@ -26,6 +26,20 @@
   --foreground: #111111;
 }
 
+/* z-index 레이어 시스템 */
+@utility z-sticky {
+  z-index: 10;
+}
+@utility z-modal-overlay {
+  z-index: 50;
+}
+@utility z-modal {
+  z-index: 60;
+}
+@utility z-modal-dropdown {
+  z-index: 70;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
