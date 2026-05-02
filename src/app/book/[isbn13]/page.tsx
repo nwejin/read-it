@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
+import { ChevronLeft } from 'lucide-react'
 import { AladinBookDetail } from '@/lib/aladin/api'
 import { ReadStatus } from '@/types'
 import { useUserBooks } from '@/hooks/useUserBooks'
@@ -63,10 +64,7 @@ export default function BookDetailPage({ params }: { params: Promise<{ isbn13: s
       {/* 헤더 */}
       <div className="sticky top-0 bg-white z-10 flex items-center px-5 pt-14 pb-4 border-b border-[#F0F0F0]">
         <button onClick={() => router.back()} className="mr-4 text-[#111]">
-          <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none"
-            viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-          </svg>
+          <ChevronLeft className="w-5 h-5" strokeWidth={2} />
         </button>
         <span className="text-lg font-semibold text-[#111] truncate">책 상세</span>
       </div>

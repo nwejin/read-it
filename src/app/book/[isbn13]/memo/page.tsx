@@ -3,6 +3,7 @@
 import { use, useCallback, useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
+import { ChevronLeft, Scissors } from 'lucide-react'
 import { AladinBookDetail } from '@/lib/aladin/api'
 import { useBookMemo, useSaveBookMemo } from '@/hooks/useBookMemo'
 
@@ -326,10 +327,7 @@ export default function MemoPage({ params }: { params: Promise<{ isbn13: string 
         <div className="flex items-center px-4 pt-14 pb-3 gap-3">
           {/* 뒤로가기 */}
           <button onClick={handleBack} className="shrink-0 text-[#111] active:opacity-50">
-            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none"
-              viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-            </svg>
+            <ChevronLeft className="w-5 h-5" strokeWidth={2} />
           </button>
 
           {/* 책 제목 */}
@@ -394,10 +392,7 @@ export default function MemoPage({ params }: { params: Promise<{ isbn13: string 
               className="w-8 h-8 flex items-center justify-center active:bg-[#F0F0F0] rounded-lg"
               aria-label="페이지 나누기"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-[#555]" fill="none"
-                viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 17H5a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v10a2 2 0 01-2 2h-4M12 12v9m0 0l-3-3m3 3l3-3" />
-              </svg>
+              <Scissors className="w-4 h-4 text-[#555]" strokeWidth={2} />
             </button>
 
             {/* 저장 버튼 */}

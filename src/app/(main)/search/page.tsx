@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import { Search, X } from 'lucide-react'
 import { AladinBook, ReadStatus } from '@/types'
 import { useUserBooks } from '@/hooks/useUserBooks'
 import BookCard from '@/components/BookCard'
@@ -75,11 +76,7 @@ export default function SearchPage() {
         <h1 className="text-3xl font-bold text-[#111] tracking-tight mb-4">읽었나?</h1>
         <form onSubmit={handleSearch} className="relative">
           <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#888]">
-            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none"
-              viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <circle cx="11" cy="11" r="8" />
-              <path d="m21 21-4.35-4.35" />
-            </svg>
+            <Search className="w-4 h-4" strokeWidth={2} />
           </span>
           <input
             type="text"
@@ -94,10 +91,7 @@ export default function SearchPage() {
               onClick={handleClear}
               className="absolute right-4 top-1/2 -translate-y-1/2 text-[#aaa]"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none"
-                viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-              </svg>
+              <X className="w-4 h-4" strokeWidth={2} />
             </button>
           )}
         </form>
