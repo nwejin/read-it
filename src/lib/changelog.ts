@@ -6,6 +6,11 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '1.8',
+    date: '2026-05-02',
+    items: ['서재 내 검색 기능 추가 — 돋보기 버튼으로 제목·저자 검색'],
+  },
+  {
     version: '1.7',
     date: '2026-05-01',
     items: [

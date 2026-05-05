@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
 import gsap from 'gsap'
-import { ChevronLeft, ChevronRight, BarChart3, BookOpen } from 'lucide-react'
+import { ChevronLeft, ChevronRight, BarChart3, BookOpen, Search, X } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { AladinBook, ReadStatus, UserBook } from '@/types'
 import BookStatusModal from '@/components/BookStatusModal'
@@ -122,10 +122,13 @@ export default function LibraryView({ userId, isOwner, nickname }: LibraryViewPr
   const [activeTab, setActiveTab] = useState<Tab>('owned')
   const [sortKey, setSortKey] = useState<SortKey>('latest')
   const [showStats, setShowStats] = useState(false)
+  const [showSearch, setShowSearch] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
   const [selectedBook, setSelectedBook] = useState<AladinBook | null>(null)
   const [selectedUserBook, setSelectedUserBook] = useState<UserBook | null>(null)
   const listRef = useRef<HTMLDivElement>(null)
   const tabBarRef = useRef<HTMLDivElement>(null)
+  const searchInputRef = useRef<HTMLInputElement>(null)
   const touchStartX = useRef(0)
   const touchStartY = useRef(0)
 
@@ -142,6 +145,16 @@ export default function LibraryView({ userId, isOwner, nickname }: LibraryViewPr
     }
     return items
   }, [items, sortKey])
+
+  const filteredItems = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase()
+    if (!q) return sortedItems
+    return sortedItems.filter(
+      (item) =>
+        item.book.title.toLowerCase().includes(q) ||
+        (item.book.author ?? '').toLowerCase().includes(q)
+    )
+  }, [sortedItems, searchQuery])
 
   const { data: stats } = useQuery({
     queryKey: ['libraryStats', userId],
@@ -168,6 +181,17 @@ export default function LibraryView({ userId, isOwner, nickname }: LibraryViewPr
   }, [activeTab])
 
   const { upsertUserBook, isPending } = useUserBooks([])
+
+  function handleToggleSearch() {
+    if (showSearch) {
+      setShowSearch(false)
+      setSearchQuery('')
+    } else {
+      setShowStats(false)
+      setShowSearch(true)
+      setTimeout(() => searchInputRef.current?.focus(), 50)
+    }
+  }
 
   function handleTabChange(tab: Tab) {
     if (tab === activeTab) return
@@ -225,13 +249,42 @@ export default function LibraryView({ userId, isOwner, nickname }: LibraryViewPr
               {nickname}의 서재
             </h1>
           </div>
-          <button
-            onClick={() => setShowStats((v) => !v)}
-            className={`p-1.5 rounded-lg transition-colors ${showStats ? 'bg-[#111] text-white' : 'text-[#aaa]'}`}
-          >
-            <BarChart3 className="w-5 h-5" strokeWidth={2} />
-          </button>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={handleToggleSearch}
+              className={`p-1.5 rounded-lg transition-colors ${showSearch ? 'bg-[#111] text-white' : 'text-[#aaa]'}`}
+            >
+              <Search className="w-5 h-5" strokeWidth={2} />
+            </button>
+            <button
+              onClick={() => { setShowStats((v) => !v); setShowSearch(false); setSearchQuery('') }}
+              className={`p-1.5 rounded-lg transition-colors ${showStats ? 'bg-[#111] text-white' : 'text-[#aaa]'}`}
+            >
+              <BarChart3 className="w-5 h-5" strokeWidth={2} />
+            </button>
+          </div>
         </div>
+
+        {showSearch && (
+          <div className="mb-2 relative">
+            <input
+              ref={searchInputRef}
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="제목 또는 저자로 검색"
+              className="w-full px-4 py-2.5 bg-[#F7F7F7] rounded-xl text-sm text-[#111] placeholder-[#bbb] outline-none"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#bbb]"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+        )}
 
         {!showStats && (
           <>
@@ -364,24 +417,30 @@ export default function LibraryView({ userId, isOwner, nickname }: LibraryViewPr
             </div>
           )}
 
-          {!isFetching && sortedItems.length === 0 && (
+          {!isFetching && filteredItems.length === 0 && (
             <div className="flex flex-col items-center justify-center py-32 text-[#ccc]">
               <BookOpen className="w-10 h-10 mb-4" strokeWidth={1.5} />
-              <p className="text-base text-[#aaa]">아직 추가한 책이 없어요</p>
-              {isOwner && (
-                <button
-                  onClick={() => router.push('/search')}
-                  className="mt-5 px-5 py-2.5 bg-[#111] text-white text-sm font-semibold rounded-xl active:scale-[0.97] transition-all"
-                >
-                  책 추가하러 가기
-                </button>
+              {searchQuery.trim() ? (
+                <p className="text-base text-[#aaa]">검색 결과가 없어요</p>
+              ) : (
+                <>
+                  <p className="text-base text-[#aaa]">아직 추가한 책이 없어요</p>
+                  {isOwner && (
+                    <button
+                      onClick={() => router.push('/search')}
+                      className="mt-5 px-5 py-2.5 bg-[#111] text-white text-sm font-semibold rounded-xl active:scale-[0.97] transition-all"
+                    >
+                      책 추가하러 가기
+                    </button>
+                  )}
+                </>
               )}
             </div>
           )}
 
-          {!isFetching && sortedItems.length > 0 && (
+          {!isFetching && filteredItems.length > 0 && (
             <div className="divide-y divide-[#F0F0F0]">
-              {sortedItems.map((item) => (
+              {filteredItems.map((item) => (
                 <button
                   key={item.userBook.id}
                   onClick={() => handleBookClick(item)}
