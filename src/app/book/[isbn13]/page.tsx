@@ -31,9 +31,9 @@ export default function BookDetailPage({ params }: { params: Promise<{ isbn13: s
   const { userBooks, upsertUserBook, isPending } = useUserBooks(isbn13 ? [isbn13] : [])
   const userBook = userBooks[isbn13]
 
-  async function handleSave(isOwned: boolean, readStatus: ReadStatus | null, rating: number | null) {
+  async function handleSave(isOwned: boolean, readStatus: ReadStatus | null, rating: number | null, readAt: string | null) {
     if (!book) return
-    await upsertUserBook({ book, isOwned, readStatus, rating })
+    await upsertUserBook({ book, isOwned, readStatus, rating, readAt })
   }
 
   if (isLoading) {
@@ -99,6 +99,16 @@ export default function BookDetailPage({ params }: { params: Promise<{ isbn13: s
             {userBook.read_status && (
               <span className="px-2.5 py-1 bg-[#F0F0F0] text-[#555] text-sm font-medium rounded-full">
                 {READ_STATUS_LABEL[userBook.read_status]}
+              </span>
+            )}
+            {userBook.rating !== null && userBook.rating !== undefined && (
+              <span className="px-2.5 py-1 bg-[#F0F0F0] text-amber-400 text-sm font-medium rounded-full">
+                {'★'.repeat(userBook.rating)}{'☆'.repeat(5 - userBook.rating)}
+                {userBook.read_at && (
+                  <span className="text-[#bbb] ml-1">
+                    · {userBook.read_at.slice(0, 10).replace(/-/g, '.')}
+                  </span>
+                )}
               </span>
             )}
           </div>

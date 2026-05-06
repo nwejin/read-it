@@ -47,6 +47,7 @@ export interface UserBook {
   is_owned: boolean
   read_status: ReadStatus | null
   rating: number | null
+  read_at: string | null
   created_at: string
   updated_at: string
 }

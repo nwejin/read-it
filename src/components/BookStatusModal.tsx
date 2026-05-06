@@ -10,7 +10,7 @@ import { AladinBook, ReadStatus, UserBook } from '@/types';
 interface Props {
   book: AladinBook;
   userBook?: UserBook | null;
-  onSave: (isOwned: boolean, readStatus: ReadStatus | null, rating: number | null) => Promise<void>;
+  onSave: (isOwned: boolean, readStatus: ReadStatus | null, rating: number | null, readAt: string | null) => Promise<void>;
   onClose: () => void;
   saving?: boolean;
   showDelete?: boolean;
@@ -35,6 +35,7 @@ export default function BookStatusModal({
     userBook ? (userBook.read_status ?? null) : 'want_to_read'
   );
   const [rating, setRating] = useState<number | null>(userBook?.rating ?? null);
+  const [readAt, setReadAt] = useState<string>(userBook?.read_at ?? '');
 
   const overlayRef = useRef<HTMLDivElement>(null);
   const sheetRef = useRef<HTMLDivElement>(null);
@@ -61,12 +62,12 @@ export default function BookStatusModal({
   }
 
   async function handleSave() {
-    await onSave(isOwned, readStatus, rating);
+    await onSave(isOwned, readStatus, rating, readStatus === 'read' ? (readAt || null) : null);
     handleClose();
   }
 
   async function handleDelete() {
-    await onSave(false, null, null);
+    await onSave(false, null, null, null);
     handleClose();
   }
 
@@ -100,8 +101,9 @@ export default function BookStatusModal({
               </Link>
               <Link
                 href={`/book/${book.isbn13}/memo`}
-                className="flex items-center justify-center w-8 h-8 rounded-full bg-[#F0F0F0] text-[#555] active:bg-[#E0E0E0] shrink-0">
-                <Pencil className="w-4 h-4" strokeWidth={2} />
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#111] text-white text-sm font-medium active:opacity-75 shrink-0">
+                <Pencil className="w-3.5 h-3.5" strokeWidth={2} />
+                메모
               </Link>
             </div>
           </div>
@@ -145,6 +147,13 @@ export default function BookStatusModal({
                   <span className={rating !== null && star <= rating ? 'text-amber-400' : 'text-[#E0E0E0]'}>★</span>
                 </button>
               ))}
+              <input
+                type="date"
+                value={readAt}
+                onChange={(e) => setReadAt(e.target.value)}
+                max={new Date().toISOString().slice(0, 10)}
+                className="ml-1 text-xs text-[#888] bg-[#F0F0F0] rounded-lg px-2 py-1 outline-none"
+              />
             </div>
           </div>
           <div className="relative flex bg-[#F7F7F7] rounded-xl p-1">

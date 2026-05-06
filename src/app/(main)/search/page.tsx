@@ -64,9 +64,9 @@ export default function SearchPage() {
     setQuery('')
   }
 
-  async function handleSaveStatus(isOwned: boolean, readStatus: ReadStatus | null, rating: number | null) {
+  async function handleSaveStatus(isOwned: boolean, readStatus: ReadStatus | null, rating: number | null, readAt: string | null) {
     if (!selectedBook) return
-    await upsertUserBook({ book: selectedBook, isOwned, readStatus, rating })
+    await upsertUserBook({ book: selectedBook, isOwned, readStatus, rating, readAt })
   }
 
   return (
