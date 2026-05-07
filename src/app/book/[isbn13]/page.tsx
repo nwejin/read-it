@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
-import { ChevronLeft } from 'lucide-react'
+import { ChevronLeft, ExternalLink } from 'lucide-react'
 import { AladinBookDetail } from '@/lib/aladin/api'
 import { ReadStatus } from '@/types'
 import { useUserBooks } from '@/hooks/useUserBooks'
@@ -101,12 +101,13 @@ export default function BookDetailPage({ params }: { params: Promise<{ isbn13: s
                 {READ_STATUS_LABEL[userBook.read_status]}
               </span>
             )}
-            {userBook.rating !== null && userBook.rating !== undefined && (
-              <span className="px-2.5 py-1 bg-[#F0F0F0] text-amber-400 text-sm font-medium rounded-full">
-                {'★'.repeat(userBook.rating)}{'☆'.repeat(5 - userBook.rating)}
+            {userBook.read_status === 'read' && (
+              <span className="px-2.5 py-1 bg-[#F0F0F0] text-sm font-medium rounded-full">
+                <span className="text-amber-400">{'★'.repeat(userBook.rating ?? 0)}</span>
+                <span className="text-[#E0E0E0]">{'☆'.repeat(5 - (userBook.rating ?? 0))}</span>
                 {userBook.read_at && (
                   <span className="text-[#bbb] ml-1">
-                    · {userBook.read_at.slice(0, 10).replace(/-/g, '.')}
+                    · {userBook.read_at.slice(0, 7).replace('-', '.')}
                   </span>
                 )}
               </span>
@@ -131,10 +132,21 @@ export default function BookDetailPage({ params }: { params: Promise<{ isbn13: s
       </div>
 
       {/* 하단 버튼 */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-[#F0F0F0] px-5 py-4">
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-[#F0F0F0] px-5 py-4 flex gap-3">
+        {book.link && (
+          <a
+            href={book.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-1.5 px-4 py-4 bg-[#F7F7F7] text-[#555] text-sm font-semibold rounded-xl shrink-0 active:opacity-70"
+          >
+            <ExternalLink className="w-4 h-4" strokeWidth={2} />
+            알라딘
+          </a>
+        )}
         <button
           onClick={() => setShowModal(true)}
-          className="w-full py-4 bg-[#111] text-white text-base font-semibold rounded-xl"
+          className="flex-1 py-4 bg-[#111] text-white text-base font-semibold rounded-xl"
         >
           {hasStatus ? '상태 변경' : '내 서재에 추가'}
         </button>

@@ -22,6 +22,15 @@ const READ_STATUS_OPTIONS: { value: ReadStatus; label: string }[] = [
   { value: 'want_to_read', label: '읽고 싶어요' },
 ];
 
+const currentYear = new Date().getFullYear();
+const YEARS = Array.from({ length: currentYear - 2019 }, (_, i) => String(currentYear - i));
+const MONTHS = Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, '0'));
+
+function parseReadAt(readAt: string) {
+  if (!readAt) return { year: '', month: '' };
+  return { year: readAt.slice(0, 4), month: readAt.slice(5, 7) };
+}
+
 export default function BookStatusModal({
   book,
   userBook,
@@ -35,7 +44,11 @@ export default function BookStatusModal({
     userBook ? (userBook.read_status ?? null) : 'want_to_read'
   );
   const [rating, setRating] = useState<number | null>(userBook?.rating ?? null);
-  const [readAt, setReadAt] = useState<string>(userBook?.read_at ?? '');
+
+  const parsed = parseReadAt(userBook?.read_at ?? '');
+  const [readYear, setReadYear] = useState(parsed.year || String(currentYear));
+  const [readMonth, setReadMonth] = useState(parsed.month || String(new Date().getMonth() + 1).padStart(2, '0'));
+  const [openPicker, setOpenPicker] = useState<'year' | 'month' | null>(null);
 
   const overlayRef = useRef<HTMLDivElement>(null);
   const sheetRef = useRef<HTMLDivElement>(null);
@@ -62,7 +75,8 @@ export default function BookStatusModal({
   }
 
   async function handleSave() {
-    await onSave(isOwned, readStatus, rating, readStatus === 'read' ? (readAt || null) : null);
+    const readAt = readStatus === 'read' ? `${readYear}-${readMonth}-01` : null;
+    await onSave(isOwned, readStatus, rating, readAt);
     handleClose();
   }
 
@@ -74,7 +88,7 @@ export default function BookStatusModal({
   return (
     <div
       ref={overlayRef}
-      className="fixed inset-0 z-50 flex items-end bg-black/30 backdrop-blur-[2px]"
+      className="fixed inset-0 z-modal-overlay flex items-end bg-black/30 backdrop-blur-[2px]"
       onClick={handleClose}>
       <div
         ref={sheetRef}
@@ -147,13 +161,6 @@ export default function BookStatusModal({
                   <span className={rating !== null && star <= rating ? 'text-amber-400' : 'text-[#E0E0E0]'}>★</span>
                 </button>
               ))}
-              <input
-                type="date"
-                value={readAt}
-                onChange={(e) => setReadAt(e.target.value)}
-                max={new Date().toISOString().slice(0, 10)}
-                className="ml-1 text-xs text-[#888] bg-[#F0F0F0] rounded-lg px-2 py-1 outline-none"
-              />
             </div>
           </div>
           <div className="relative flex bg-[#F7F7F7] rounded-xl p-1">
@@ -178,6 +185,55 @@ export default function BookStatusModal({
                 {opt.label}
               </button>
             ))}
+          </div>
+
+          {/* 년/월 선택 */}
+          <div className={`transition-all duration-300 ease-in-out ${readStatus === 'read' ? 'max-h-100 mt-3 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
+            <div className="flex gap-2">
+              {/* 년 */}
+              <div className="flex-1 relative">
+                {openPicker === 'year' && (
+                  <div className="absolute bottom-full left-0 right-0 mb-1 bg-white border border-[#F0F0F0] rounded-xl shadow-lg overflow-y-auto max-h-44 z-modal-dropdown">
+                    {YEARS.map((y) => (
+                      <button
+                        key={y}
+                        onClick={() => { setReadYear(y); setOpenPicker(null); }}
+                        className={`w-full py-2.5 text-sm text-center transition-colors ${y === readYear ? 'font-bold text-[#111]' : 'text-[#888]'}`}>
+                        {y}년
+                      </button>
+                    ))}
+                  </div>
+                )}
+                <button
+                  onClick={() => setOpenPicker((p) => (p === 'year' ? null : 'year'))}
+                  className={`w-full py-2.5 rounded-xl text-sm font-semibold transition-colors ${openPicker === 'year' ? 'bg-[#111] text-white' : 'bg-[#F7F7F7] text-[#111]'}`}>
+                  {readYear}년
+                </button>
+              </div>
+
+              {/* 월 */}
+              <div className="flex-1 relative">
+                {openPicker === 'month' && (
+                  <div className="absolute bottom-full left-0 right-0 mb-1 bg-white border border-[#F0F0F0] rounded-xl shadow-lg z-modal-dropdown p-1">
+                    <div className="grid grid-cols-4 gap-1">
+                      {MONTHS.map((m) => (
+                        <button
+                          key={m}
+                          onClick={() => { setReadMonth(m); setOpenPicker(null); }}
+                          className={`py-2 text-sm rounded-lg transition-colors ${m === readMonth ? 'bg-[#111] text-white font-bold' : 'text-[#888]'}`}>
+                          {parseInt(m)}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                <button
+                  onClick={() => setOpenPicker((p) => (p === 'month' ? null : 'month'))}
+                  className={`w-full py-2.5 rounded-xl text-sm font-semibold transition-colors ${openPicker === 'month' ? 'bg-[#111] text-white' : 'bg-[#F7F7F7] text-[#111]'}`}>
+                  {parseInt(readMonth)}월
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 

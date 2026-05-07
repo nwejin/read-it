@@ -70,10 +70,17 @@ export default function FriendsPage() {
 
       {/* 빈 상태 */}
       {!isLoading && friends.length === 0 && (
-        <div className="flex flex-col items-center justify-center py-32 text-[#ccc]">
-          <Users className="w-10 h-10 mb-4" strokeWidth={1.5} />
-          <p className="text-base text-[#aaa] mb-1">아직 친구가 없어요</p>
-          <p className="text-sm text-[#ccc]">초대 링크를 공유해서 친구를 추가해보세요</p>
+        <div className="flex flex-col items-center justify-center py-28 text-[#ccc]">
+          <Users className="w-12 h-12 mb-4" strokeWidth={1.5} />
+          <p className="text-base font-semibold text-[#aaa] mb-1">아직 친구가 없어요</p>
+          <p className="text-sm text-[#ccc] mb-8">초대 링크를 공유해서 친구를 추가해보세요</p>
+          <button
+            onClick={handleShareLink}
+            className="flex items-center gap-2 px-5 py-3 bg-[#111] text-white text-sm font-semibold rounded-xl active:scale-95 transition-transform"
+          >
+            <Link2 className="w-4 h-4" strokeWidth={2.5} />
+            {linkCopied ? '복사됨 ✓' : '초대 링크 복사'}
+          </button>
         </div>
       )}
 
@@ -147,7 +154,7 @@ export default function FriendsPage() {
       {/* 친구 삭제 확인 모달 */}
       {confirmFriend && (
         <div
-          className="fixed inset-0 z-50 flex items-end bg-black/30 backdrop-blur-[2px]"
+          className="fixed inset-0 z-modal-overlay flex items-end bg-black/30 backdrop-blur-[2px]"
           onClick={() => setConfirmFriend(null)}
         >
           <div

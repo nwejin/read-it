@@ -63,6 +63,7 @@ export function useSaveBookMemo() {
     },
     onSuccess: (_, { isbn13 }) => {
       queryClient.invalidateQueries({ queryKey: ['bookMemo', isbn13] })
+      queryClient.invalidateQueries({ queryKey: ['library'] })
     },
   })
 }

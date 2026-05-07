@@ -86,6 +86,7 @@ export function useUserBooks(isbn13s: string[]) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userBooks'] })
       queryClient.invalidateQueries({ queryKey: ['library'] })
+      queryClient.invalidateQueries({ queryKey: ['libraryStats'] })
     },
   })
 
