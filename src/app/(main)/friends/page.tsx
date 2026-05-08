@@ -12,7 +12,7 @@ export default function FriendsPage() {
   const router = useRouter()
   const [linkCopied, setLinkCopied] = useState(false)
   const [confirmFriend, setConfirmFriend] = useState<FriendEntry | null>(null)
-  const { data: friends = [], isLoading } = useFollowing()
+  const { data: friends = [], isLoading, isError } = useFollowing()
   const unfollow = useUnfollowMutation()
   const dismiss = useDismissRemovedFriend()
   const markRead = useMarkFriendsRead()
@@ -68,8 +68,13 @@ export default function FriendsPage() {
         </div>
       )}
 
+      {/* 에러 */}
+      {isError && (
+        <p className="text-center text-sm text-[#aaa] py-20">불러오지 못했어요. 잠시 후 다시 시도해 주세요.</p>
+      )}
+
       {/* 빈 상태 */}
-      {!isLoading && friends.length === 0 && (
+      {!isLoading && !isError && friends.length === 0 && (
         <div className="flex flex-col items-center justify-center py-28 text-[#ccc]">
           <Users className="w-12 h-12 mb-4" strokeWidth={1.5} />
           <p className="text-base font-semibold text-[#aaa] mb-1">아직 친구가 없어요</p>
@@ -84,7 +89,7 @@ export default function FriendsPage() {
         </div>
       )}
 
-      {!isLoading && friends.length > 0 && (
+      {!isLoading && !isError && friends.length > 0 && (
         <div className="divide-y divide-[#F0F0F0]">
           {/* 활성 친구 목록 */}
           {activeFriends.map((friend) => (

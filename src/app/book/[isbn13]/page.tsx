@@ -6,9 +6,10 @@ import { useRouter } from 'next/navigation'
 import { notFound } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
-import { ChevronLeft, ExternalLink } from 'lucide-react'
+import { ChevronLeft, ExternalLink, AlertCircle } from 'lucide-react'
 import { AladinBookDetail } from '@/lib/aladin/api'
 import { BookDetailSkeleton } from '@/components/Skeletons'
+import ErrorPage from '@/components/ErrorPage'
 import { ReadStatus } from '@/types'
 import { useUserBooks } from '@/hooks/useUserBooks'
 import BookStatusModal from '@/components/BookStatusModal'
@@ -24,7 +25,7 @@ export default function BookDetailPage({ params }: { params: Promise<{ isbn13: s
   const router = useRouter()
   const [showModal, setShowModal] = useState(false)
 
-  const { data: book, isLoading } = useQuery({
+  const { data: book, isLoading, isError, refetch } = useQuery({
     queryKey: ['bookDetail', isbn13],
     queryFn: () => fetchDetail(isbn13),
     staleTime: 1000 * 60 * 60 * 24,
@@ -38,9 +39,8 @@ export default function BookDetailPage({ params }: { params: Promise<{ isbn13: s
     await upsertUserBook({ book, isOwned, readStatus, rating, readAt })
   }
 
-  if (isLoading) {
-    return <BookDetailSkeleton />
-  }
+  if (isLoading) return <BookDetailSkeleton />
+  if (isError) return <ErrorPage icon={AlertCircle} title="불러오지 못했어요" description="잠시 후 다시 시도해 주세요." action={{ label: '다시 시도', onClick: () => refetch() }} />
 
   if (!book) {
     notFound()
