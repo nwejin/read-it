@@ -3,6 +3,7 @@ import './globals.css';
 import Providers from './providers';
 import { Analytics } from '@vercel/analytics/next';
 import UpdateBanner from '@/components/UpdateBanner';
+import { Toaster } from 'sonner';
 
 export const metadata: Metadata = {
   title: '읽었나?',
@@ -19,6 +20,7 @@ export default function RootLayout({
       <body className="min-h-screen bg-white">
         <UpdateBanner />
         <Providers>{children}</Providers>
+        <Toaster position="top-center" duration={3000} />
         <Analytics />
       </body>
     </html>

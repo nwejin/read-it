@@ -3,6 +3,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { createClient } from '@/lib/supabase/client'
 import { FriendEntry } from '@/types'
+import { toast } from 'sonner'
 
 async function fetchFollowing(): Promise<FriendEntry[]> {
   const supabase = createClient()
@@ -78,6 +79,7 @@ export function useUnfollowMutation() {
       if (!res.ok) throw new Error('삭제에 실패했어요.')
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['following'] }),
+    onError: () => toast.error('친구 삭제에 실패했어요.'),
   })
 }
 
@@ -93,5 +95,6 @@ export function useDismissRemovedFriend() {
       if (error) throw error
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['following'] }),
+    onError: () => toast.error('처리에 실패했어요.'),
   })
 }
