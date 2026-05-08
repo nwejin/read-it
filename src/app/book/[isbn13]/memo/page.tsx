@@ -4,6 +4,7 @@ import { use, useCallback, useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
 import { ChevronLeft, Scissors } from 'lucide-react'
+import { MemoSkeleton } from '@/components/Skeletons'
 import { AladinBookDetail } from '@/lib/aladin/api'
 import { useBookMemo, useSaveBookMemo } from '@/hooks/useBookMemo'
 
@@ -416,9 +417,7 @@ export default function MemoPage({ params }: { params: Promise<{ isbn13: string 
 
       {/* 메모 본문 */}
       {isLoading ? (
-        <div className="flex-1 flex items-center justify-center text-[#ccc] text-sm">
-          불러오는 중...
-        </div>
+        <MemoSkeleton />
       ) : (
         <div className="flex-1 px-5 pt-5 pb-32">
           {pages.map((pageContent, i) => (

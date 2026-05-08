@@ -3,10 +3,12 @@
 import { use } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import { ChevronLeft, ExternalLink } from 'lucide-react'
 import { AladinBookDetail } from '@/lib/aladin/api'
+import { BookDetailSkeleton } from '@/components/Skeletons'
 import { ReadStatus } from '@/types'
 import { useUserBooks } from '@/hooks/useUserBooks'
 import BookStatusModal from '@/components/BookStatusModal'
@@ -37,19 +39,11 @@ export default function BookDetailPage({ params }: { params: Promise<{ isbn13: s
   }
 
   if (isLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen text-[#888] text-base">
-        불러오는 중...
-      </div>
-    )
+    return <BookDetailSkeleton />
   }
 
   if (!book) {
-    return (
-      <div className="flex justify-center items-center min-h-screen text-[#888] text-base">
-        책을 찾을 수 없어요.
-      </div>
-    )
+    notFound()
   }
 
   const hasStatus = userBook && (userBook.is_owned || userBook.read_status)

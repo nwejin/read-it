@@ -3,6 +3,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { createClient } from '@/lib/supabase/client'
 import { UserBook, ReadStatus, AladinBook } from '@/types'
+import { toast } from 'sonner'
 
 export function useUserBooks(isbn13s: string[]) {
   const queryClient = useQueryClient()
@@ -83,10 +84,18 @@ export function useUserBooks(isbn13s: string[]) {
       if (userBookError) throw userBookError
       return data as UserBook
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['userBooks'] })
       queryClient.invalidateQueries({ queryKey: ['library'] })
       queryClient.invalidateQueries({ queryKey: ['libraryStats'] })
+      if (data === null) {
+        toast.success('서재에서 삭제했어요.')
+      } else {
+        toast.success('서재에 저장했어요.')
+      }
+    },
+    onError: () => {
+      toast.error('서재 업데이트에 실패했어요.')
     },
   })
 

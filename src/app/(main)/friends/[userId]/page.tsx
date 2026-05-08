@@ -1,29 +1,30 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { notFound } from 'next/navigation'
 import { useParams } from 'next/navigation'
+import { useQuery } from '@tanstack/react-query'
 import { createClient } from '@/lib/supabase/client'
 import LibraryView from '@/components/LibraryView'
+import { LibrarySkeleton } from '@/components/Skeletons'
 
 export default function FriendLibraryPage() {
   const { userId } = useParams<{ userId: string }>()
-  const [nickname, setNickname] = useState('')
-  const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    const supabase = createClient()
-    supabase
-      .from('profiles')
-      .select('nickname')
-      .eq('id', userId)
-      .single()
-      .then(({ data }) => {
-        setNickname(data?.nickname ?? '')
-        setLoading(false)
-      })
-  }, [userId])
+  const { data, isLoading } = useQuery({
+    queryKey: ['profile', userId],
+    queryFn: async () => {
+      const supabase = createClient()
+      const { data } = await supabase
+        .from('profiles')
+        .select('nickname')
+        .eq('id', userId)
+        .single()
+      return data
+    },
+  })
 
-  if (loading) return null
+  if (isLoading) return <LibrarySkeleton />
+  if (!data) notFound()
 
-  return <LibraryView userId={userId} isOwner={false} nickname={nickname} />
+  return <LibraryView userId={userId} isOwner={false} nickname={data.nickname} />
 }

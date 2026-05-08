@@ -3,6 +3,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { createClient } from '@/lib/supabase/client'
 import { BookMemo } from '@/types'
+import { toast } from 'sonner'
 
 export function useBookMemo(isbn13: string) {
   const supabase = createClient()
@@ -64,6 +65,9 @@ export function useSaveBookMemo() {
     onSuccess: (_, { isbn13 }) => {
       queryClient.invalidateQueries({ queryKey: ['bookMemo', isbn13] })
       queryClient.invalidateQueries({ queryKey: ['library'] })
+    },
+    onError: () => {
+      toast.error('메모 저장에 실패했어요.')
     },
   })
 }

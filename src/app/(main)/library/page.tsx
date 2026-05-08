@@ -1,28 +1,31 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { createClient } from '@/lib/supabase/client'
 import LibraryView from '@/components/LibraryView'
+import { LibrarySkeleton } from '@/components/Skeletons'
 
 export default function LibraryPage() {
-  const [userId, setUserId] = useState<string | null>(null)
-  const [nickname, setNickname] = useState('')
-
-  useEffect(() => {
-    const supabase = createClient()
-    supabase.auth.getUser().then(async ({ data: { user } }) => {
-      if (!user) return
-      setUserId(user.id)
-      const { data } = await supabase
+  const { data, isLoading } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: async () => {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return null
+      const { data: profile } = await supabase
         .from('profiles')
         .select('nickname')
         .eq('id', user.id)
         .single()
-      setNickname(data?.nickname ?? user.user_metadata?.nickname ?? '')
-    })
-  }, [])
+      return {
+        userId: user.id,
+        nickname: profile?.nickname ?? user.user_metadata?.nickname ?? '',
+      }
+    },
+  })
 
-  if (!userId) return null
+  if (isLoading) return <LibrarySkeleton />
+  if (!data) return null
 
-  return <LibraryView userId={userId} isOwner={true} nickname={nickname} />
+  return <LibraryView userId={data.userId} isOwner={true} nickname={data.nickname} />
 }
