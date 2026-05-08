@@ -3,10 +3,11 @@
 import { use, useCallback, useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
-import { ChevronLeft, Scissors } from 'lucide-react'
+import { ChevronLeft, Scissors, AlertCircle } from 'lucide-react'
 import { MemoSkeleton } from '@/components/Skeletons'
 import { AladinBookDetail } from '@/lib/aladin/api'
 import { useBookMemo, useSaveBookMemo } from '@/hooks/useBookMemo'
+import ErrorPage from '@/components/ErrorPage'
 
 const FONT_SIZES = [12, 14, 16, 18, 20, 24]
 const FONT_COLORS = [
@@ -134,7 +135,7 @@ export default function MemoPage({ params }: { params: Promise<{ isbn13: string 
     staleTime: 1000 * 60 * 60 * 24,
   })
 
-  const { data: memo, isLoading } = useBookMemo(isbn13)
+  const { data: memo, isLoading, isError, refetch } = useBookMemo(isbn13)
   const { mutateAsync: saveMemo, isPending: saving } = useSaveBookMemo()
 
   const [pages, setPages] = useState<string[]>([''])
@@ -418,6 +419,8 @@ export default function MemoPage({ params }: { params: Promise<{ isbn13: string 
       {/* 메모 본문 */}
       {isLoading ? (
         <MemoSkeleton />
+      ) : isError ? (
+        <ErrorPage icon={AlertCircle} title="불러오지 못했어요" description="잠시 후 다시 시도해 주세요." action={{ label: '다시 시도', onClick: () => refetch() }} />
       ) : (
         <div className="flex-1 px-5 pt-5 pb-32">
           {pages.map((pageContent, i) => (

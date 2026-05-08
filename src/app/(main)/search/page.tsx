@@ -34,14 +34,14 @@ export default function SearchPage() {
 
   const isSearching = query.trim().length > 0
 
-  const { data: searchResults = [], isFetching: isSearchFetching } = useQuery({
+  const { data: searchResults = [], isFetching: isSearchFetching, isError: isSearchError } = useQuery({
     queryKey: ['search', query],
     queryFn: () => fetchBooks(query),
     enabled: isSearching,
     staleTime: 1000 * 60 * 5,
   })
 
-  const { data: bestsellers = [], isFetching: isBestsellerFetching } = useQuery({
+  const { data: bestsellers = [], isFetching: isBestsellerFetching, isError: isBestsellerError } = useQuery({
     queryKey: ['bestsellers'],
     queryFn: fetchBestsellers,
     enabled: !isSearching,
@@ -119,7 +119,11 @@ export default function SearchPage() {
           </div>
         )}
 
-        {!isFetching && isSearching && searchResults.length === 0 && (
+        {!isFetching && (isSearchError || isBestsellerError) && (
+          <p className="text-center text-sm text-[#aaa] py-20">불러오지 못했어요. 잠시 후 다시 시도해 주세요.</p>
+        )}
+
+        {!isFetching && isSearching && !isSearchError && searchResults.length === 0 && (
           <div className="flex justify-center py-20 text-[#888] text-base">검색 결과가 없어요.</div>
         )}
 
