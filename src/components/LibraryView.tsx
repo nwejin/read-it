@@ -633,10 +633,6 @@ export default function LibraryView({ userId, isOwner, nickname }: LibraryViewPr
                         {item.book.title}
                       </div>
                     )}
-                    <div className="absolute top-1.5 right-1.5 flex flex-col gap-1 items-end">
-                      <div className={`w-2 h-2 rounded-full ${item.userBook.is_owned ? 'bg-[#111]' : 'bg-[#ccc]'}`} />
-                      {item.hasMemo && <div className="w-2 h-2 rounded-full bg-amber-400" />}
-                    </div>
                   </div>
                   <p className="text-xs text-[#333] font-medium line-clamp-2 leading-tight">{item.book.title}</p>
                 </button>
