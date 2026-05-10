@@ -5,11 +5,12 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import gsap from 'gsap';
-import { ChevronLeft, ChevronRight, BarChart3, BookOpen, Search, X, Pencil } from 'lucide-react';
+import { ChevronLeft, ChevronRight, BarChart3, BookOpen, Search, X, Pencil, LayoutGrid, List } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { AladinBook, ReadStatus, UserBook } from '@/types';
 import BookStatusModal from '@/components/BookStatusModal';
 import { BookCardSkeleton } from '@/components/Skeletons';
+import { toast } from 'sonner';
 import { useUserBooks } from '@/hooks/useUserBooks';
 
 type Tab = 'owned' | 'not_owned' | 'read' | 'reading' | 'want_to_read';
@@ -150,6 +151,17 @@ export default function LibraryView({ userId, isOwner, nickname }: LibraryViewPr
   const [selectedYear, setSelectedYear] = useState<string>(String(new Date().getFullYear()));
   const [showSearch, setShowSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [viewMode, setViewMode] = useState<'list' | 'grid'>(() => {
+    if (typeof window === 'undefined') return 'list';
+    return (localStorage.getItem('libraryViewMode') as 'list' | 'grid') ?? 'list';
+  });
+
+  function handleViewModeToggle() {
+    const next = viewMode === 'list' ? 'grid' : 'list';
+    setViewMode(next);
+    localStorage.setItem('libraryViewMode', next);
+    toast(next === 'grid' ? '표지 보기로 변경했어요' : '리스트 보기로 변경했어요');
+  }
   const [selectedBook, setSelectedBook] = useState<AladinBook | null>(null);
   const [selectedUserBook, setSelectedUserBook] = useState<UserBook | null>(null);
   const listRef = useRef<HTMLDivElement>(null);
@@ -278,11 +290,20 @@ export default function LibraryView({ userId, isOwner, nickname }: LibraryViewPr
             <h1 className="text-3xl font-bold text-[#111] tracking-tight">{nickname}의 서재</h1>
           </div>
           <div className="flex items-center gap-1">
+            {!showStats && (
             <button
               onClick={handleToggleSearch}
               className={`p-1.5 rounded-lg transition-colors ${showSearch ? 'bg-[#111] text-white' : 'text-[#aaa]'}`}>
               <Search className="w-5 h-5" strokeWidth={2} />
             </button>
+            )}
+            {!showStats && (
+              <button
+                onClick={handleViewModeToggle}
+                className={`p-1.5 rounded-lg transition-colors ${viewMode === 'grid' ? 'bg-[#111] text-white' : 'text-[#aaa]'}`}>
+                {viewMode === 'grid' ? <List className="w-5 h-5" strokeWidth={2} /> : <LayoutGrid className="w-5 h-5" strokeWidth={2} />}
+              </button>
+            )}
             <button
               onClick={() => {
                 setShowStats((v) => !v);
@@ -517,7 +538,7 @@ export default function LibraryView({ userId, isOwner, nickname }: LibraryViewPr
             </div>
           )}
 
-          {!isFetching && filteredItems.length > 0 && (
+          {!isFetching && filteredItems.length > 0 && viewMode === 'list' && (
             <div className="divide-y divide-[#F0F0F0]">
               {filteredItems.map((item) => (
                 <button
@@ -592,6 +613,32 @@ export default function LibraryView({ userId, isOwner, nickname }: LibraryViewPr
                   <div className="shrink-0 self-center text-[#ddd]">
                     <ChevronRight className="w-4 h-4" strokeWidth={2} />
                   </div>
+                </button>
+              ))}
+            </div>
+          )}
+
+          {!isFetching && filteredItems.length > 0 && viewMode === 'grid' && (
+            <div className="grid grid-cols-3 gap-x-3 gap-y-5 pt-4 pb-10">
+              {filteredItems.map((item) => (
+                <button
+                  key={item.userBook.id}
+                  onClick={() => handleBookClick(item)}
+                  className="book-item flex flex-col gap-1.5 text-left active:scale-[0.96] transition-transform">
+                  <div className="relative aspect-2/3 w-full bg-[#F0F0F0] rounded-lg overflow-hidden">
+                    {item.book.cover ? (
+                      <Image src={item.book.cover} alt={item.book.title} fill sizes="33vw" className="object-cover" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-[#ccc] text-[10px] px-2 text-center leading-tight">
+                        {item.book.title}
+                      </div>
+                    )}
+                    <div className="absolute top-1.5 right-1.5 flex flex-col gap-1 items-end">
+                      <div className={`w-2 h-2 rounded-full ${item.userBook.is_owned ? 'bg-[#111]' : 'bg-[#ccc]'}`} />
+                      {item.hasMemo && <div className="w-2 h-2 rounded-full bg-amber-400" />}
+                    </div>
+                  </div>
+                  <p className="text-xs text-[#333] font-medium line-clamp-2 leading-tight">{item.book.title}</p>
                 </button>
               ))}
             </div>

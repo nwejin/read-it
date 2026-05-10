@@ -6,6 +6,14 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '1.9',
+    date: '2026-05-10',
+    items: [
+      '표지 보기 추가 — 표지 중심의 3열 보기, 설정이 유지돼요',
+      '전체 탭 헤더 고정 — 친구·프로필 탭도 서재처럼 헤더 상단 고정',
+    ],
+  },
+  {
     version: '1.8',
     date: '2026-05-02',
     items: [

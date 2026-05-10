@@ -20,7 +20,7 @@ export default function RootLayout({
       <body className="min-h-screen bg-white">
         <UpdateBanner />
         <Providers>{children}</Providers>
-        <Toaster position="top-center" duration={3000} />
+        <Toaster position="top-center" duration={2000} />
         <Analytics />
       </body>
     </html>
