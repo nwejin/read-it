@@ -48,19 +48,22 @@ export default function FriendsPage() {
   }
 
   return (
-    <div className="max-w-lg mx-auto px-5 pt-14">
-      {/* 헤더 */}
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl font-bold text-[#111] tracking-tight">친구</h1>
-        <button
-          onClick={handleShareLink}
-          className="flex items-center gap-1.5 px-3.5 py-2 bg-[#111] text-white text-sm font-semibold rounded-xl active:scale-95 transition-transform"
-        >
-          <Link2 className="w-4 h-4" strokeWidth={2.5} />
-          {linkCopied ? '복사됨 ✓' : '초대 링크 복사'}
-        </button>
+    <div className="max-w-lg mx-auto">
+      {/* 고정 헤더 */}
+      <div className="sticky top-0 bg-white z-10 px-5 pt-14 pb-4 border-b border-[#F0F0F0]">
+        <div className="flex items-center justify-between">
+          <h1 className="text-3xl font-bold text-[#111] tracking-tight">친구</h1>
+          <button
+            onClick={handleShareLink}
+            className="flex items-center gap-1.5 px-3.5 py-2 bg-[#111] text-white text-sm font-semibold rounded-xl active:scale-95 transition-transform"
+          >
+            <Link2 className="w-4 h-4" strokeWidth={2.5} />
+            {linkCopied ? '복사됨 ✓' : '초대 링크 복사'}
+          </button>
+        </div>
       </div>
 
+      <div className="px-5 pt-4">
       {/* 로딩 */}
       {isLoading && (
         <div className="divide-y divide-[#F0F0F0]">
@@ -156,7 +159,9 @@ export default function FriendsPage() {
         </div>
       )}
 
-      {/* 친구 삭제 확인 모달 */}
+      </div>
+
+      {/* 친구 삭제 확인 모달은 fixed라 위치 무관 */}
       {confirmFriend && (
         <div
           className="fixed inset-0 z-modal-overlay flex items-end bg-black/30 backdrop-blur-[2px]"

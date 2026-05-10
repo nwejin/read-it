@@ -117,9 +117,13 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="max-w-lg mx-auto px-5 pt-14">
-      <h1 className="text-3xl font-bold text-[#111] tracking-tight mb-8">프로필</h1>
+    <div className="max-w-lg mx-auto">
+      {/* 고정 헤더 */}
+      <div className="sticky top-0 bg-white z-10 px-5 pt-14 pb-4 border-b border-[#F0F0F0]">
+        <h1 className="text-3xl font-bold text-[#111] tracking-tight">프로필</h1>
+      </div>
 
+      <div className="px-5 pt-6">
       {/* 아바타 */}
       <div className="flex justify-center mb-8">
         <div className="relative">
@@ -264,6 +268,7 @@ export default function ProfilePage() {
             ))}
           </ul>
         </div>
+      </div>
       </div>
     </div>
   )
