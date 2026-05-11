@@ -36,7 +36,8 @@ export default function ProfilePage() {
         .single()
       setNickname(data?.nickname ?? user.user_metadata?.nickname ?? '')
       setUserCode(data?.user_code ?? '')
-      setAvatarUrl(data?.avatar_url ?? null)
+      const rawAvatar = data?.avatar_url ?? null
+      setAvatarUrl(rawAvatar ? rawAvatar.replace(/^http:\/\//, 'https://') : null)
     })
   }, [])
 
@@ -99,8 +100,7 @@ export default function ProfilePage() {
     setLoading(true)
     const supabase = createClient()
     await supabase.auth.signOut()
-    router.push('/login')
-    router.refresh()
+    window.location.href = '/login'
   }
 
   async function handleWithdraw() {
@@ -109,8 +109,7 @@ export default function ProfilePage() {
     if (res.ok) {
       const supabase = createClient()
       await supabase.auth.signOut()
-      router.push('/login')
-      router.refresh()
+      window.location.href = '/login'
     } else {
       setWithdrawing(false)
     }

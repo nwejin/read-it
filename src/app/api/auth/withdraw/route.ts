@@ -7,14 +7,34 @@ export async function DELETE() {
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
+    console.error('[withdraw] no user session')
     return NextResponse.json({ error: '로그인이 필요해요.' }, { status: 401 })
   }
+  console.log('[withdraw] user id:', user.id)
 
   const adminClient = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
     { auth: { autoRefreshToken: false, persistSession: false } }
   )
+
+  // 카카오 유저인 경우 카카오 연결 해제
+  const { data: profile } = await adminClient
+    .from('profiles')
+    .select('kakao_id')
+    .eq('id', user.id)
+    .single()
+
+  if (profile?.kakao_id) {
+    await fetch(`https://kapi.kakao.com/v1/user/unlink`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `KakaoAK ${process.env.KAKAO_ADMIN_KEY}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({ target_id_type: 'user_id', target_id: String(profile.kakao_id) }),
+    })
+  }
 
   // 관련 데이터 먼저 삭제 (FK 제약 해제)
   await adminClient.from('user_books').delete().eq('user_id', user.id)
@@ -24,7 +44,7 @@ export async function DELETE() {
   const { error } = await adminClient.auth.admin.deleteUser(user.id)
 
   if (error) {
-    console.error('withdraw error:', error)
+    console.error('[withdraw] deleteUser error:', error)
     return NextResponse.json({ error: '탈퇴에 실패했어요.' }, { status: 500 })
   }
 

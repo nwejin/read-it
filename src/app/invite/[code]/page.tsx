@@ -31,7 +31,7 @@ export default function InvitePage() {
         supabase.auth.getUser(),
         supabase
           .from('profiles')
-          .select('id, nickname, user_code, avatar_url, created_at')
+          .select('id, nickname, user_code, avatar_url, kakao_id, email, created_at')
           .eq('user_code', code?.toUpperCase() ?? '')
           .maybeSingle(),
       ]);
