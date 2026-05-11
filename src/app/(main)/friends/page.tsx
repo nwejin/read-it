@@ -4,13 +4,13 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useFollowing, useUnfollowMutation, useMarkFriendsRead, useDismissRemovedFriend } from '@/hooks/useFriends'
 import Image from 'next/image'
-import { Link2, Users, X, ChevronRight } from 'lucide-react'
+import { Users, X, ChevronRight } from 'lucide-react'
+import { shareInviteLink } from '@/lib/kakao'
 import { FriendItemSkeleton } from '@/components/Skeletons'
 import { FriendEntry } from '@/types'
 
 export default function FriendsPage() {
   const router = useRouter()
-  const [linkCopied, setLinkCopied] = useState(false)
   const [confirmFriend, setConfirmFriend] = useState<FriendEntry | null>(null)
   const { data: friends = [], isLoading, isError } = useFollowing()
   const unfollow = useUnfollowMutation()
@@ -31,14 +31,11 @@ export default function FriendsPage() {
     if (!user) return
     const { data } = await supabase
       .from('profiles')
-      .select('user_code')
+      .select('nickname, user_code')
       .eq('id', user.id)
       .single()
     if (!data?.user_code) return
-    const link = `${window.location.origin}/invite/${data.user_code}`
-    await navigator.clipboard.writeText(link)
-    setLinkCopied(true)
-    setTimeout(() => setLinkCopied(false), 2000)
+    shareInviteLink(data.nickname, data.user_code)
   }
 
   async function handleConfirmUnfollow() {
@@ -55,10 +52,9 @@ export default function FriendsPage() {
           <h1 className="text-3xl font-bold text-[#111] tracking-tight">친구</h1>
           <button
             onClick={handleShareLink}
-            className="flex items-center gap-1.5 px-3.5 py-2 bg-[#111] text-white text-sm font-semibold rounded-xl active:scale-95 transition-transform"
+            className="flex items-center gap-1.5 px-3.5 py-2 bg-[#FEE500] text-[#191919] text-sm font-semibold rounded-xl active:scale-95 transition-transform"
           >
-            <Link2 className="w-4 h-4" strokeWidth={2.5} />
-            {linkCopied ? '복사됨 ✓' : '초대 링크 복사'}
+            카카오톡으로 초대
           </button>
         </div>
       </div>
@@ -84,10 +80,9 @@ export default function FriendsPage() {
           <p className="text-sm text-[#ccc] mb-8">초대 링크를 공유해서 친구를 추가해보세요</p>
           <button
             onClick={handleShareLink}
-            className="flex items-center gap-2 px-5 py-3 bg-[#111] text-white text-sm font-semibold rounded-xl active:scale-95 transition-transform"
+            className="flex items-center gap-2 px-5 py-3 bg-[#FEE500] text-[#191919] text-sm font-semibold rounded-xl active:scale-95 transition-transform"
           >
-            <Link2 className="w-4 h-4" strokeWidth={2.5} />
-            {linkCopied ? '복사됨 ✓' : '초대 링크 복사'}
+            카카오톡으로 초대
           </button>
         </div>
       )}

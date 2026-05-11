@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { Camera, Link2 } from 'lucide-react'
+import { Camera } from 'lucide-react'
+import { shareInviteLink } from '@/lib/kakao'
 import { createClient } from '@/lib/supabase/client'
 import { CHANGELOG } from '@/lib/changelog'
 import WithdrawModal from '@/components/WithdrawModal'
@@ -13,7 +14,6 @@ export default function ProfilePage() {
   const [email, setEmail] = useState('')
   const [nickname, setNickname] = useState('')
   const [userCode, setUserCode] = useState('')
-  const [copied, setCopied] = useState(false)
   const [loading, setLoading] = useState(false)
   const [showWithdraw, setShowWithdraw] = useState(false)
   const [withdrawing, setWithdrawing] = useState(false)
@@ -41,12 +41,9 @@ export default function ProfilePage() {
     })
   }, [])
 
-  async function handleCopyCode() {
-    if (!userCode) return
-    const link = `${window.location.origin}/invite/${userCode}`
-    await navigator.clipboard.writeText(link)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
+  function handleCopyCode() {
+    if (!userCode || !nickname) return
+    shareInviteLink(nickname, userCode)
   }
 
   // 카카오 공유 - 플랫폼 등록 후 활성화
@@ -214,10 +211,9 @@ export default function ProfilePage() {
           </div>
           <button
             onClick={handleCopyCode}
-            className="w-full flex items-center justify-center gap-1.5 py-3 bg-[#111] text-white text-sm font-semibold rounded-xl active:scale-95 transition-transform"
+            className="w-full flex items-center justify-center gap-1.5 py-3 bg-[#FEE500] text-[#191919] text-sm font-semibold rounded-xl active:scale-95 transition-transform"
           >
-            {!copied && <Link2 className="w-4 h-4" strokeWidth={2.5} />}
-            {copied ? '복사됨 ✓' : '초대 링크 복사'}
+            카카오톡으로 초대
           </button>
           <p className="text-xs text-[#888] text-center mt-2">링크를 친구에게 공유하면 양쪽 모두 자동으로 친구 추가돼요</p>
         </div>
