@@ -99,7 +99,7 @@ export default function ProfilePage() {
     setLoading(true)
     const supabase = createClient()
     await supabase.auth.signOut()
-    router.push('/login')
+    router.push('/')
     router.refresh()
   }
 
@@ -109,7 +109,7 @@ export default function ProfilePage() {
     if (res.ok) {
       const supabase = createClient()
       await supabase.auth.signOut()
-      router.push('/login')
+      router.push('/')
       router.refresh()
     } else {
       setWithdrawing(false)
