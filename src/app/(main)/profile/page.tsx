@@ -97,7 +97,7 @@ export default function ProfilePage() {
     setLoading(true)
     const supabase = createClient()
     await supabase.auth.signOut()
-    window.location.href = '/login'
+    window.location.href = '/'
   }
 
   async function handleWithdraw() {
@@ -106,7 +106,7 @@ export default function ProfilePage() {
     if (res.ok) {
       const supabase = createClient()
       await supabase.auth.signOut()
-      window.location.href = '/login'
+      window.location.href = '/'
     } else {
       setWithdrawing(false)
     }

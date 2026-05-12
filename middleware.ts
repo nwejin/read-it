@@ -29,15 +29,16 @@ export async function middleware(request: NextRequest) {
   const isAuthPage = pathname.startsWith('/login') || pathname.startsWith('/register')
   const isInvitePage = pathname.startsWith('/invite/')
   const isApiAuthRoute = pathname.startsWith('/api/auth/')
+  const isRootPage = pathname === '/'
 
-  if (!user && !isAuthPage && !isInvitePage && !isApiAuthRoute) {
+  if (!user && !isAuthPage && !isInvitePage && !isApiAuthRoute && !isRootPage) {
     const loginUrl = new URL('/login', request.url)
     loginUrl.searchParams.set('redirect', pathname)
     return NextResponse.redirect(loginUrl)
   }
 
   if (user && isAuthPage) {
-    return NextResponse.redirect(new URL('/search', request.url))
+    return NextResponse.redirect(new URL('/library', request.url))
   }
 
   return supabaseResponse
