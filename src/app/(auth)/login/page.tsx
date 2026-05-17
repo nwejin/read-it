@@ -1,35 +1,36 @@
-'use client';
+'use client'
 
-import { Suspense, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import Link from 'next/link';
-import { createClient } from '@/lib/supabase/client';
+import { Suspense, useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import Link from 'next/link'
+import { createClient } from '@/lib/supabase/client'
 
-function LoginForm() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+function LoginContent() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  async function handleLogin(e: React.FormEvent) {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
+  const hasError = searchParams.get('error')
 
-    const supabase = createClient();
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+  async function handleLogin() {
+    setError('')
+    setLoading(true)
+
+    const supabase = createClient()
+    const { error } = await supabase.auth.signInWithPassword({ email, password })
 
     if (error) {
-      setError('이메일 또는 비밀번호가 올바르지 않아요.');
-      setLoading(false);
-      return;
+      setError('이메일 또는 비밀번호가 올바르지 않아요.')
+      setLoading(false)
+      return
     }
 
-    const redirect = searchParams.get('redirect');
-    router.push(redirect ?? '/library');
-    router.refresh();
+    const redirect = searchParams.get('redirect')
+    router.push(redirect ?? '/library')
+    router.refresh()
   }
 
   return (
@@ -39,7 +40,27 @@ function LoginForm() {
         <p className="mt-1.5 text-sm text-[#888]">나만의 서재에 로그인하세요</p>
       </div>
 
-      <form onSubmit={handleLogin} className="space-y-3">
+      {hasError && (
+        <p className="mb-4 text-sm text-red-500 text-center">
+          카카오 로그인에 실패했어요. 다시 시도해주세요.
+        </p>
+      )}
+
+      <a
+        href="/api/auth/kakao/start"
+        className="w-full py-4 bg-[#FEE500] text-[#191919] text-base font-semibold rounded-xl transition-all active:scale-[0.97] flex items-center justify-center gap-2 mb-4"
+      >
+        <KakaoIcon />
+        카카오 로그인
+      </a>
+
+      <div className="flex items-center gap-3 mb-4">
+        <div className="flex-1 h-px bg-[#E8E8E8]" />
+        <span className="text-xs text-[#aaa]">또는</span>
+        <div className="flex-1 h-px bg-[#E8E8E8]" />
+      </div>
+
+      <form action={handleLogin} className="space-y-3">
         <input
           type="email"
           value={email}
@@ -63,7 +84,8 @@ function LoginForm() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-4 bg-[#111] text-white text-base font-semibold rounded-xl transition-all active:scale-[0.97] disabled:opacity-40">
+            className="w-full py-4 bg-[#111] text-white text-base font-semibold rounded-xl transition-all active:scale-[0.97] disabled:opacity-40"
+          >
             {loading ? '로그인 중...' : '로그인'}
           </button>
         </div>
@@ -76,13 +98,26 @@ function LoginForm() {
         </Link>
       </p>
     </div>
-  );
+  )
+}
+
+function KakaoIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M9 0.5C4.305 0.5 0.5 3.416 0.5 7.021C0.5 9.247 1.886 11.204 4.025 12.393L3.14 15.637C3.072 15.887 3.351 16.089 3.57 15.944L7.393 13.468C7.921 13.525 8.458 13.542 9 13.542C13.695 13.542 17.5 10.626 17.5 7.021C17.5 3.416 13.695 0.5 9 0.5Z"
+        fill="#191919"
+      />
+    </svg>
+  )
 }
 
 export default function LoginPage() {
   return (
     <Suspense>
-      <LoginForm />
+      <LoginContent />
     </Suspense>
-  );
+  )
 }

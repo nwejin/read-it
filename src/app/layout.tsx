@@ -3,6 +3,7 @@ import './globals.css';
 import Providers from './providers';
 import { Analytics } from '@vercel/analytics/next';
 import UpdateBanner from '@/components/UpdateBanner';
+import KakaoScript from '@/components/KakaoScript';
 import { Toaster } from 'sonner';
 
 export const metadata: Metadata = {
@@ -19,6 +20,7 @@ export default function RootLayout({
     <html lang="ko">
       <body className="min-h-screen bg-white">
         <UpdateBanner />
+        <KakaoScript />
         <Providers>{children}</Providers>
         <Toaster position="top-center" duration={2000} />
         <Analytics />

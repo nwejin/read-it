@@ -5,6 +5,8 @@ export interface Profile {
   nickname: string
   user_code: string
   avatar_url: string | null
+  kakao_id: number | null
+  email: string | null
   created_at: string
 }
 

@@ -2,18 +2,6 @@
 
 import Script from 'next/script'
 
-declare global {
-  interface Window {
-    Kakao: {
-      init: (key: string) => void
-      isInitialized: () => boolean
-      Share: {
-        sendDefault: (settings: object) => void
-      }
-    }
-  }
-}
-
 export default function KakaoSDK() {
   function handleLoad() {
     if (window.Kakao && !window.Kakao.isInitialized()) {

@@ -6,6 +6,13 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '2.0',
+    date: '2026-05-17',
+    items: [
+      '카카오 로그인 추가 — 카카오 계정으로 간편하게 로그인할 수 있어요',
+    ],
+  },
+  {
     version: '1.9',
     date: '2026-05-10',
     items: [
